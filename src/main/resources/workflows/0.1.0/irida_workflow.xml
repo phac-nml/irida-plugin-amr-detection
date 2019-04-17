@@ -80,7 +80,6 @@
     <output name="staramr-summary.tsv" fileName="staramr-summary.tsv"/>
     <output name="rgi-summary.tsv" fileName="rgi-summary.tsv"/>
     <output name="staramr-resfinder.tsv" fileName="staramr-resfinder.tsv"/>
-    <output name="staramr-pointfinder.tsv" fileName="staramr-pointfinder.tsv"/>
     <output name="staramr-excel.xlsx" fileName="staramr-excel.xlsx"/>
     <output name="staramr-settings.txt" fileName="staramr-settings.txt"/>
     <output name="shovill-contigs.fasta" fileName="shovill-contigs.fasta"/>
