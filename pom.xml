@@ -20,7 +20,7 @@
 
 		<java.version>1.8</java.version>
 		
-		<irida.version.compiletime>19.04-SNAPSHOT</irida.version.compiletime>
+		<irida.version.compiletime>19.01.3</irida.version.compiletime>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>

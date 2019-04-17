@@ -34,7 +34,9 @@ In order to use this pipeline, you will also have to install the [RGI][], [stara
 
 # Building
 
-To build this plugin yourself, you must first install [IRIDA][] to your local Maven repository. To do this please run:
+To build this plugin yourself, you must first install [IRIDA][] to your local Maven repository. Please make sure you are installing the IRIDA version defined in the `irida.version.compiletime` property in the [pom.xml][] file (e.g., `19.01.3`). Or, alternatively, please update the IRIDA dependency version in the `pom.xml` file.
+
+To install the IRIDA libraries to a local Maven repository, please run:
 
 ```bash
 mvn clean install -DskipTests
@@ -46,7 +48,7 @@ Once IRIDA is installed, you may build the pipeline plugin with:
 mvn clean package
 ```
 
-This should produce a `target/*.jar` file.
+This should produce a `target/*.jar` file, which can be copied into `/etc/irida/plugins/`.
 
 # Legal
 
@@ -71,3 +73,4 @@ specific language governing permissions and limitations under the License.
 [amr-pipeline-results.png]: images/amr-pipeline-results.png
 [amr-pipeline-metadata.png]: images/amr-pipeline-metadata.png
 [releases]: https://github.com/phac-nml/irida-plugin-amr-detection/releases
+[pom.xml]: pom.xml
