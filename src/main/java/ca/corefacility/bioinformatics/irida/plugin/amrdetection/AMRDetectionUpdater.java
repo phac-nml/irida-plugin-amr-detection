@@ -45,10 +45,10 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 	private static final String RGI_SUMMARY = "rgi-summary.tsv";
 
 	private static final Splitter SPLITTER = Splitter.on('\t');
-	
+
 	private static final String METADATA_RGI_DRUG_CLASS = "rgi/drug-class";
 	private static final String METADATA_RGI_GENE = "rgi/gene";
-	
+
 	private static final String METADATA_STARAMR_GENE = "staramr/gene";
 	private static final String METADATA_STARAMR_DRUG_CLASS = "staramr/drug-class";
 
@@ -70,35 +70,56 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 		this.iridaWorkflowsService = iridaWorkflowsService;
 	}
 
-	private Map<String, List<String>> getStarAMRResults(Path staramrFilePath) throws IOException {
-		final int SAMPLE_NAME = 0;
+	/**
+	 * Gets the staramr results from the given output file.
+	 * 
+	 * @param staramrFilePath The staramr output file containing the results.
+	 * @return A {@link AMRResult} storing the results from staramr as
+	 *         {@link String}s.
+	 * @throws IOException             If there was an issue reading the file.
+	 * @throws PostProcessingException If there was an issue parsing the file.
+	 */
+	private AMRResult getStarAMRResults(Path staramrFilePath) throws IOException, PostProcessingException {
 		final int GENOTYPE = 1;
 		final int DRUG = 2;
 
-		Map<String, List<String>> staramrEntries = new HashMap<>();
+		final int MAX_TOKENS = 3;
 
 		@SuppressWarnings("resource")
 		BufferedReader reader = new BufferedReader(new FileReader(staramrFilePath.toFile()));
 		String line = reader.readLine();
-		// skip first (header) line
-		line = reader.readLine();
-		while (line != null) {
-			List<String> tokens = SPLITTER.splitToList(line);
-
-			String sampleName = tokens.get(SAMPLE_NAME);
-			String genotype = tokens.get(GENOTYPE);
-			String drug = tokens.get(DRUG);
-
-			staramrEntries.put(sampleName, Lists.newArrayList(genotype, drug));
-
-			line = reader.readLine();
+		List<String> tokens = SPLITTER.splitToList(line);
+		if (tokens.size() != MAX_TOKENS) {
+			throw new PostProcessingException("Invalid number of columns in staramr results file [" + staramrFilePath
+					+ "], expected [" + MAX_TOKENS + "] got [" + tokens.size());
 		}
 
-		return staramrEntries;
+		line = reader.readLine();
+		tokens = SPLITTER.splitToList(line);
+		String genotype = tokens.get(GENOTYPE);
+		String drug = tokens.get(DRUG);
+
+		line = reader.readLine();
+
+		if (line == null) {
+			return new AMRResult(genotype, drug);
+		} else {
+			throw new PostProcessingException("Invalid number of results in staramr results file [" + staramrFilePath
+					+ "], expected only one line of results but got multiple lines");
+		}
 	}
 
-	private RGIResult getRgiEntries(Path rgiFilePath) throws IOException {
+	/**
+	 * Gets the RGI results from the given output file.
+	 * 
+	 * @param rgiFilePath The path to the RGI output file.
+	 * @return An {@link AMRResult} object containing the results.
+	 * @throws IOException             If there was an issue reading the file.
+	 * @throws PostProcessingException If there was an issue parsing the file.
+	 */
+	private AMRResult getRgiEntries(Path rgiFilePath) throws IOException, PostProcessingException {
 		final int MAX_TOKENS = 23;
+
 		final int BEST_HIT_ARO = 8;
 		final int DRUG_CLASS = 14;
 
@@ -134,7 +155,7 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 
 		if (!genotypes.isEmpty()) {
 			Collections.sort(genotypes);
-			
+
 			String genotypesString = joiner.join(genotypes);
 
 			Set<String> drugsSet = Sets.newTreeSet();
@@ -142,9 +163,9 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 
 			String drugsString = joiner.join(drugsSet);
 
-			return new RGIResult(genotypesString, drugsString);
+			return new AMRResult(genotypesString, drugsString);
 		} else {
-			return null;
+			throw new PostProcessingException("No results found in rgi output file [" + rgiFilePath + "]");
 		}
 	}
 
@@ -157,8 +178,6 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 			throw new PostProcessingException(
 					"Expected one sample; got '" + samples.size() + "' for analysis [id=" + analysis.getId() + "]");
 		}
-		final int GENOTYPE = 0;
-		final int DRUG = 1;
 
 		final Sample sample = samples.iterator().next();
 
@@ -172,44 +191,34 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 
 		Map<String, MetadataEntry> stringEntries = new HashMap<>();
 		try {
-			Map<String, List<String>> staramrEntries = getStarAMRResults(staramrFilePath);
-			RGIResult rgiResult = getRgiEntries(rgiFilePath);
-
 			IridaWorkflow iridaWorkflow = iridaWorkflowsService.getIridaWorkflow(analysis.getWorkflowId());
 			String workflowVersion = iridaWorkflow.getWorkflowDescription().getVersion();
 
-			if (staramrEntries.size() == 1) {
-				for (String key : staramrEntries.keySet()) {
-					final String genotype = staramrEntries.get(key).get(GENOTYPE);
-					final String drug = staramrEntries.get(key).get(DRUG);
+			AMRResult staramrResult = getStarAMRResults(staramrFilePath);
+			AMRResult rgiResult = getRgiEntries(rgiFilePath);
 
-					PipelineProvidedMetadataEntry genotypeEntry = new PipelineProvidedMetadataEntry(genotype, "text",
-							analysis);
-					PipelineProvidedMetadataEntry drugEntry = new PipelineProvidedMetadataEntry(drug, "text",
-							analysis);
-					stringEntries.put(appendVersion(METADATA_STARAMR_GENE,workflowVersion), genotypeEntry);
-					stringEntries.put(appendVersion(METADATA_STARAMR_DRUG_CLASS,workflowVersion), drugEntry);
-				}
-			} else {
-				logger.debug(staramrFilePath + " contains no or invalid staramr results.");
-			}
+			PipelineProvidedMetadataEntry staramrGenotypeEntry = new PipelineProvidedMetadataEntry(
+					staramrResult.getGenotype(), "text", analysis);
+			PipelineProvidedMetadataEntry staramrDrugEntry = new PipelineProvidedMetadataEntry(
+					staramrResult.getDrugClass(), "text", analysis);
+			PipelineProvidedMetadataEntry rgiGenotypeEntry = new PipelineProvidedMetadataEntry(rgiResult.getGenotype(),
+					"text", analysis);
+			PipelineProvidedMetadataEntry rgiDrugEntry = new PipelineProvidedMetadataEntry(rgiResult.getDrugClass(),
+					"text", analysis);
 
-			if (rgiResult != null) {
-				PipelineProvidedMetadataEntry genotypeEntry = new PipelineProvidedMetadataEntry(rgiResult.getGenotype(),
-						"text", analysis);
-				PipelineProvidedMetadataEntry drugEntry = new PipelineProvidedMetadataEntry(
-						rgiResult.getDrugClass(), "text", analysis);
-				stringEntries.put(appendVersion(METADATA_RGI_GENE,workflowVersion), genotypeEntry);
-				stringEntries.put(appendVersion(METADATA_RGI_DRUG_CLASS,workflowVersion), drugEntry);
-			} else {
-				logger.debug(rgiFilePath + " contains no or invalid rgi results.");
-			}
+			stringEntries.put(appendVersion(METADATA_STARAMR_GENE, workflowVersion), staramrGenotypeEntry);
+			stringEntries.put(appendVersion(METADATA_STARAMR_DRUG_CLASS, workflowVersion), staramrDrugEntry);
+			stringEntries.put(appendVersion(METADATA_RGI_GENE, workflowVersion), rgiGenotypeEntry);
+			stringEntries.put(appendVersion(METADATA_RGI_DRUG_CLASS, workflowVersion), rgiDrugEntry);
 
 			Map<MetadataTemplateField, MetadataEntry> metadataMap = metadataTemplateService
 					.getMetadataMap(stringEntries);
 
 			sample.mergeMetadata(metadataMap);
 			sampleService.updateFields(sample.getId(), ImmutableMap.of("metadata", sample.getMetadata()));
+		} catch (PostProcessingException e) {
+			// re-throw exception so we don't wrap it in a new exception at the end.
+			throw e;
 		} catch (IOException e) {
 			throw new PostProcessingException("Error parsing amr detection results", e);
 		} catch (IridaWorkflowNotFoundException e) {
@@ -219,19 +228,26 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 			throw e;
 		}
 	}
-	
+
+	/**
+	 * Appends the name and version together for a metadata field name.
+	 * 
+	 * @param name    The name.
+	 * @param version The version.
+	 * @return The appended name and version.
+	 */
 	private String appendVersion(String name, String version) {
 		return name + "/" + version;
 	}
 
 	/**
-	 * Class used to store together data extracted from the RGI table.
+	 * Class used to store together data extracted from the RGI/staramr tables.
 	 */
-	private class RGIResult {
+	private class AMRResult {
 		private String genotype;
 		private String drugClass;
 
-		public RGIResult(String genotype, String drugClass) {
+		public AMRResult(String genotype, String drugClass) {
 			this.genotype = genotype;
 			this.drugClass = drugClass;
 		}
