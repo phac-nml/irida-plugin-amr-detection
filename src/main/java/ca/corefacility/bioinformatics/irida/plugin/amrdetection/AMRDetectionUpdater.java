@@ -80,8 +80,8 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 	 * @throws PostProcessingException If there was an issue parsing the file.
 	 */
 	private AMRResult getStarAMRResults(Path staramrFilePath) throws IOException, PostProcessingException {
-		final int GENOTYPE = 1;
-		final int DRUG = 2;
+		final int GENOTYPE_INDEX = 1;
+		final int DRUG_INDEX = 2;
 
 		final int MAX_TOKENS = 3;
 
@@ -96,8 +96,8 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 
 		line = reader.readLine();
 		tokens = SPLITTER.splitToList(line);
-		String genotype = tokens.get(GENOTYPE);
-		String drug = tokens.get(DRUG);
+		String genotype = tokens.get(GENOTYPE_INDEX);
+		String drug = tokens.get(DRUG_INDEX);
 
 		line = reader.readLine();
 
@@ -120,8 +120,8 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 	private AMRResult getRgiEntries(Path rgiFilePath) throws IOException, PostProcessingException {
 		final int MAX_TOKENS = 23;
 
-		final int BEST_HIT_ARO = 8;
-		final int DRUG_CLASS = 14;
+		final int BEST_HIT_ARO_INDEX = 8;
+		final int DRUG_CLASS_INDEX = 14;
 
 		final String DRUG_CLASS_SPLIT = ";";
 
@@ -144,8 +144,8 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 				continue;
 			}
 
-			String genotype = tokens.get(BEST_HIT_ARO);
-			String drugClass = tokens.get(DRUG_CLASS);
+			String genotype = tokens.get(BEST_HIT_ARO_INDEX);
+			String drugClass = tokens.get(DRUG_CLASS_INDEX);
 
 			genotypes.add(genotype);
 			drugs.add(drugClass);
