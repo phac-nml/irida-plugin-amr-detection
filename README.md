@@ -34,15 +34,19 @@ In order to use this pipeline, you will also have to install the [RGI][], [stara
 
 # Building
 
+## Installing IRIDA Libraries
+
 To build this plugin yourself, you must first install [IRIDA][] to your local Maven repository. Please make sure you are installing the IRIDA version defined in the `irida.version.compiletime` property in the [pom.xml][] file (e.g., `19.01.3`). Or, alternatively, please update the IRIDA dependency version in the `pom.xml` file.
 
-To install the IRIDA libraries to a local Maven repository, please run:
+To install the IRIDA libraries to a local Maven repository, please run the following from within the [IRIDA][] project (the `irida/` directory):
 
 ```bash
 mvn clean install -DskipTests
 ```
 
-Once IRIDA is installed, you may build the pipeline plugin with:
+## Building AMR Detection Plugin
+
+Once IRIDA is installed, you may build the pipeline plugin by running the following in this project's directory (the `irida-plugin-amr-detection/` directory):
 
 ```bash
 mvn clean package
