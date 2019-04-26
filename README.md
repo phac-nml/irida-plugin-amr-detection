@@ -1,3 +1,6 @@
+[![GitHub release](https://img.shields.io/github/release/phac-nml/irida-plugin-amr-detection.svg)](https://github.com/phac-nml/irida-plugin-amr-detection/releases/latest)
+[![Gitter](https://img.shields.io/gitter/room/phac-nml/irida.svg)](https://gitter.im/irida-project/Lobby)
+
 # IRIDA AMR Detection Pipeline
 
 This project contains an [IRIDA][] plugin for a pipeline to perform AMR detection using [RGI][] and [staramr][].
