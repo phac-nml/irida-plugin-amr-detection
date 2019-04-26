@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>ca.corefacility.bioinformatics.irida</groupId>
+	<artifactId>amr-detection</artifactId>
+	<version>0.1.0</version>
+
+	<properties>
+		<plugin.id>amr-detection</plugin.id>
+		<plugin.class>ca.corefacility.bioinformatics.irida.plugin.amrdetection.AMRDetectionPlugin</plugin.class>
+		<plugin.version>0.1.0</plugin.version>
+		<plugin.provider>Aaron Petkau</plugin.provider>
+		<plugin.dependencies></plugin.dependencies>
+		<plugin.requires.runtime>1.0.0</plugin.requires.runtime>
+
+		<pf4j.version>2.4.0</pf4j.version>
+
+		<java.version>1.8</java.version>
+		
+		<irida.version.compiletime>19.01.3</irida.version.compiletime>
+
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>ca.corefacility.bioinformatics</groupId>
+			<artifactId>irida</artifactId>
+			<version>${irida.version.compiletime}</version>
+			<classifier>classes</classifier>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.pf4j</groupId>
+			<artifactId>pf4j</artifactId>
+			<version>${pf4j.version}</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<!-- Maven compiler plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<forceJavacCompilerUse>true</forceJavacCompilerUse>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.1.1</version>
+
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<Plugin-Class>${plugin.class}</Plugin-Class>
+							<Plugin-Dependencies>${plugin.dependencies}</Plugin-Dependencies>
+							<Plugin-Id>${plugin.id}</Plugin-Id>
+							<Plugin-Provider>${plugin.provider}</Plugin-Provider>
+							<Plugin-Version>${plugin.version}</Plugin-Version>
+							<Plugin-Requires>${plugin.requires.runtime}</Plugin-Requires>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

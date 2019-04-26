@@ -1,0 +1,335 @@
+{
+    "uuid": "24fcddf4-91e3-49a9-b746-d41f63c085c0",
+    "tags": [],
+    "format-version": "0.1",
+    "name": "AMR Detection",
+    "version": 3,
+    "steps": {
+        "0": {
+            "tool_id": null,
+            "tool_version": null,
+            "outputs": [],
+            "workflow_outputs": [
+                {
+                    "output_name": "output",
+                    "uuid": "e68f5ed4-ef69-4726-b65d-a158f9ee9037",
+                    "label": null
+                }
+            ],
+            "input_connections": {},
+            "tool_state": "{\"collection_type\": \"list:paired\", \"name\": \"sequence_reads_paired\"}",
+            "id": 0,
+            "uuid": "f39af4f6-29a6-4358-84b4-3319899cbb12",
+            "errors": null,
+            "name": "Input dataset collection",
+            "label": "sequence_reads_paired",
+            "inputs": [
+                {
+                    "name": "sequence_reads_paired",
+                    "description": ""
+                }
+            ],
+            "position": {
+                "top": 200,
+                "left": 200
+            },
+            "annotation": "",
+            "content_id": null,
+            "type": "data_collection_input"
+        },
+        "1": {
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/iuc/shovill/shovill/1.0.4",
+            "tool_version": "1.0.4",
+            "outputs": [
+                {
+                    "type": "txt",
+                    "name": "shovill_std_log"
+                },
+                {
+                    "type": "fasta",
+                    "name": "contigs"
+                },
+                {
+                    "type": "txt",
+                    "name": "contigs_graph"
+                }
+            ],
+            "workflow_outputs": [
+                {
+                    "output_name": "contigs",
+                    "uuid": "276cd805-a60b-4075-9176-330801cda242",
+                    "label": null
+                },
+                {
+                    "output_name": "shovill_std_log",
+                    "uuid": "b71fabd9-e639-41ea-8d8d-7ef105854fa6",
+                    "label": null
+                },
+                {
+                    "output_name": "contigs_graph",
+                    "uuid": "6986c11d-5876-43eb-889c-aa1153dfaec4",
+                    "label": null
+                }
+            ],
+            "input_connections": {
+                "library|input1": {
+                    "output_name": "output",
+                    "id": 0
+                }
+            },
+            "tool_state": "{\"adv\": \"{\\\"depth\\\": \\\"100\\\", \\\"gsize\\\": \\\"\\\", \\\"kmers\\\": \\\"\\\", \\\"mincov\\\": \\\"2\\\", \\\"minlen\\\": \\\"1000\\\", \\\"namefmt\\\": \\\"contig%05d\\\", \\\"nocorr\\\": \\\"false\\\", \\\"opts\\\": \\\"\\\"}\", \"trim\": \"\\\"false\\\"\", \"log\": \"\\\"true\\\"\", \"__page__\": null, \"__rerun_remap_job_id__\": null, \"assembler\": \"\\\"spades\\\"\", \"library\": \"{\\\"__current_case__\\\": 1, \\\"input1\\\": {\\\"__class__\\\": \\\"RuntimeValue\\\"}, \\\"lib_type\\\": \\\"collection\\\"}\"}",
+            "id": 1,
+            "tool_shed_repository": {
+                "owner": "iuc",
+                "changeset_revision": "865119fcb694",
+                "name": "shovill",
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            },
+            "uuid": "a1207389-35e5-42da-9012-20b099205871",
+            "errors": null,
+            "name": "Shovill",
+            "post_job_actions": {
+                "RenameDatasetActioncontigs_graph": {
+                    "output_name": "contigs_graph",
+                    "action_type": "RenameDatasetAction",
+                    "action_arguments": {
+                        "newname": "shovill-contigs.gfa"
+                    }
+                },
+                "RenameDatasetActionshovill_std_log": {
+                    "output_name": "shovill_std_log",
+                    "action_type": "RenameDatasetAction",
+                    "action_arguments": {
+                        "newname": "shovill-std.log"
+                    }
+                },
+                "RenameDatasetActioncontigs": {
+                    "output_name": "contigs",
+                    "action_type": "RenameDatasetAction",
+                    "action_arguments": {
+                        "newname": "shovill-contigs.fasta"
+                    }
+                }
+            },
+            "label": null,
+            "inputs": [
+                {
+                    "name": "library",
+                    "description": "runtime parameter for tool Shovill"
+                }
+            ],
+            "position": {
+                "top": 200,
+                "left": 477
+            },
+            "annotation": "",
+            "content_id": "toolshed.g2.bx.psu.edu/repos/iuc/shovill/shovill/1.0.4",
+            "type": "tool"
+        },
+        "2": {
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/nml/staramr/staramr_search/0.4.0",
+            "tool_version": "0.4.0",
+            "outputs": [
+                {
+                    "type": "input",
+                    "name": "blast_hits"
+                },
+                {
+                    "type": "tabular",
+                    "name": "summary"
+                },
+                {
+                    "type": "tabular",
+                    "name": "resfinder"
+                },
+                {
+                    "type": "tabular",
+                    "name": "pointfinder"
+                },
+                {
+                    "type": "txt",
+                    "name": "settings"
+                },
+                {
+                    "type": "xlsx",
+                    "name": "excel"
+                }
+            ],
+            "workflow_outputs": [
+                {
+                    "output_name": "settings",
+                    "uuid": "95f87b65-aa08-4a52-b075-66f1665bbb21",
+                    "label": null
+                },
+                {
+                    "output_name": "summary",
+                    "uuid": "bba0dfb4-e67f-4bbe-939a-47eedcd0102b",
+                    "label": null
+                },
+                {
+                    "output_name": "pointfinder",
+                    "uuid": "1894e8a1-faf5-49d3-9511-620c06782b49",
+                    "label": null
+                },
+                {
+                    "output_name": "resfinder",
+                    "uuid": "102e88ce-0030-453d-8ca6-77960e1302c7",
+                    "label": null
+                }
+            ],
+            "input_connections": {
+                "genomes": {
+                    "output_name": "contigs",
+                    "id": 1
+                }
+            },
+            "tool_state": "{\"__page__\": null, \"__rerun_remap_job_id__\": null, \"genomes\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"advanced\": \"{\\\"exclude_genes\\\": {\\\"__current_case__\\\": 0, \\\"exclude_genes_condition\\\": \\\"default\\\"}, \\\"exclude_negatives\\\": \\\"false\\\", \\\"exclude_resistance_phenotypes\\\": \\\"false\\\", \\\"pid_threshold\\\": \\\"98.0\\\", \\\"plength_pointfinder\\\": \\\"95.0\\\", \\\"plength_resfinder\\\": \\\"60.0\\\", \\\"report_all_blast\\\": \\\"false\\\"}\", \"use_pointfinder\": \"{\\\"__current_case__\\\": 0, \\\"enable\\\": \\\"true\\\", \\\"organism\\\": \\\"salmonella\\\"}\"}",
+            "id": 2,
+            "tool_shed_repository": {
+                "owner": "nml",
+                "changeset_revision": "930893c83a1a",
+                "name": "staramr",
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            },
+            "uuid": "e61df3a1-dd74-408a-9c03-fbb690bd2db5",
+            "errors": null,
+            "name": "staramr",
+            "post_job_actions": {
+                "RenameDatasetActionpointfinder": {
+                    "output_name": "pointfinder",
+                    "action_type": "RenameDatasetAction",
+                    "action_arguments": {
+                        "newname": "staramr-pointfinder.tsv"
+                    }
+                },
+                "HideDatasetActionexcel": {
+                    "output_name": "excel",
+                    "action_type": "HideDatasetAction",
+                    "action_arguments": {}
+                },
+                "RenameDatasetActionsummary": {
+                    "output_name": "summary",
+                    "action_type": "RenameDatasetAction",
+                    "action_arguments": {
+                        "newname": "staramr-summary.tsv"
+                    }
+                },
+                "RenameDatasetActionsettings": {
+                    "output_name": "settings",
+                    "action_type": "RenameDatasetAction",
+                    "action_arguments": {
+                        "newname": "staramr-settings.txt"
+                    }
+                },
+                "RenameDatasetActionexcel": {
+                    "output_name": "excel",
+                    "action_type": "RenameDatasetAction",
+                    "action_arguments": {
+                        "newname": "staramr-excel.xlsx"
+                    }
+                },
+                "HideDatasetActionblast_hits": {
+                    "output_name": "blast_hits",
+                    "action_type": "HideDatasetAction",
+                    "action_arguments": {}
+                },
+                "RenameDatasetActionresfinder": {
+                    "output_name": "resfinder",
+                    "action_type": "RenameDatasetAction",
+                    "action_arguments": {
+                        "newname": "staramr-resfinder.tsv"
+                    }
+                }
+            },
+            "label": null,
+            "inputs": [
+                {
+                    "name": "genomes",
+                    "description": "runtime parameter for tool staramr"
+                }
+            ],
+            "position": {
+                "top": 200,
+                "left": 706
+            },
+            "annotation": "",
+            "content_id": "toolshed.g2.bx.psu.edu/repos/nml/staramr/staramr_search/0.4.0",
+            "type": "tool"
+        },
+        "3": {
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/card/rgi/rgi/4.2.2",
+            "tool_version": "4.2.2",
+            "outputs": [
+                {
+                    "type": "json",
+                    "name": "report"
+                },
+                {
+                    "type": "tabular",
+                    "name": "summary"
+                }
+            ],
+            "workflow_outputs": [
+                {
+                    "output_name": "report",
+                    "uuid": "d4542103-0200-4979-b220-097d0d5391a4",
+                    "label": null
+                },
+                {
+                    "output_name": "summary",
+                    "uuid": "0d9dd88b-40b9-48c6-b2eb-49433a293766",
+                    "label": null
+                }
+            ],
+            "input_connections": {
+                "input_sequence": {
+                    "output_name": "contigs",
+                    "id": 1
+                }
+            },
+            "tool_state": "{\"__page__\": null, \"alignment_tool\": \"\\\"diamond\\\"\", \"db_opts\": \"{\\\"__current_case__\\\": 0, \\\"db_opts_selector\\\": \\\"default\\\", \\\"rgi_db_hist\\\": \\\"\\\", \\\"rgi_db_local\\\": \\\"\\\"}\", \"input_type\": \"\\\"contig\\\"\", \"include_loose\": \"\\\"false\\\"\", \"low_quality\": \"\\\"false\\\"\", \"input_sequence\": \"{\\\"__class__\\\": \\\"RuntimeValue\\\"}\", \"data\": \"\\\"NA\\\"\", \"__rerun_remap_job_id__\": null}",
+            "id": 3,
+            "tool_shed_repository": {
+                "owner": "card",
+                "changeset_revision": "715bc9aeef69",
+                "name": "rgi",
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            },
+            "uuid": "e54fe3ce-89a9-4c00-8e17-2ac46fedd11c",
+            "errors": null,
+            "name": "Resistance Gene Identifier (RGI)",
+            "post_job_actions": {
+                "RenameDatasetActionsummary": {
+                    "output_name": "summary",
+                    "action_type": "RenameDatasetAction",
+                    "action_arguments": {
+                        "newname": "rgi-summary.tsv"
+                    }
+                },
+                "RenameDatasetActionreport": {
+                    "output_name": "report",
+                    "action_type": "RenameDatasetAction",
+                    "action_arguments": {
+                        "newname": "rgi-report.json"
+                    }
+                }
+            },
+            "label": null,
+            "inputs": [
+                {
+                    "name": "input_sequence",
+                    "description": "runtime parameter for tool Resistance Gene Identifier (RGI)"
+                }
+            ],
+            "position": {
+                "top": 456,
+                "left": 706
+            },
+            "annotation": "",
+            "content_id": "toolshed.g2.bx.psu.edu/repos/card/rgi/rgi/4.2.2",
+            "type": "tool"
+        }
+    },
+    "annotation": "",
+    "a_galaxy_workflow": "true"
+}

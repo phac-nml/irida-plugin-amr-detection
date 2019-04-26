@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<iridaWorkflow>
+  <id>b1a0fd27-2948-41c1-aecc-8f541f1d5dbd</id>
+  <name>amr-detection</name>
+  <version>0.1.0</version>
+  <analysisType>AMR_DETECTION</analysisType>
+  <inputs>
+    <sequenceReadsPaired>sequence_reads_paired</sequenceReadsPaired>
+    <requiresSingleSample>true</requiresSingleSample>
+  </inputs>
+  <parameters>
+    <parameter name="shovill-1-adv.nocorr" defaultValue="false">
+      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/iuc/shovill/shovill/1.0.4" parameterName="adv.nocorr"/>
+    </parameter>
+    <parameter name="shovill-1-adv.mincov" defaultValue="1">
+      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/iuc/shovill/shovill/1.0.4" parameterName="adv.mincov"/>
+    </parameter>
+    <parameter name="shovill-1-trim" defaultValue="false">
+      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/iuc/shovill/shovill/1.0.4" parameterName="trim"/>
+    </parameter>
+    <parameter name="shovill-1-adv.namefmt" defaultValue="contig%05d">
+      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/iuc/shovill/shovill/1.0.4" parameterName="adv.namefmt"/>
+    </parameter>
+    <parameter name="shovill-1-adv.depth" defaultValue="100">
+      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/iuc/shovill/shovill/1.0.4" parameterName="adv.depth"/>
+    </parameter>
+    <parameter name="shovill-1-adv.gsize" defaultValue="">
+      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/iuc/shovill/shovill/1.0.4" parameterName="adv.gsize"/>
+    </parameter>
+    <parameter name="shovill-1-adv.kmers" defaultValue="">
+      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/iuc/shovill/shovill/1.0.4" parameterName="adv.kmers"/>
+    </parameter>
+    <parameter name="shovill-1-adv.opts" defaultValue="">
+      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/iuc/shovill/shovill/1.0.4" parameterName="adv.opts"/>
+    </parameter>
+    <parameter name="shovill-1-adv.minlen" defaultValue="1">
+      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/iuc/shovill/shovill/1.0.4" parameterName="adv.minlen"/>
+    </parameter>
+    <parameter name="shovill-1-assembler" defaultValue="spades">
+      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/iuc/shovill/shovill/1.0.4" parameterName="assembler"/>
+    </parameter>
+    <parameter name="staramr-2-advanced.exclude_negatives" defaultValue="false">
+      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/nml/staramr/staramr_search/0.4.0" parameterName="advanced.exclude_negatives"/>
+    </parameter>
+    <parameter name="staramr-2-advanced.plength_resfinder" defaultValue="60.0">
+      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/nml/staramr/staramr_search/0.4.0" parameterName="advanced.plength_resfinder"/>
+    </parameter>
+    <parameter name="staramr-2-use_pointfinder.enable" defaultValue="true">
+      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/nml/staramr/staramr_search/0.4.0" parameterName="use_pointfinder.enable"/>
+    </parameter>
+    <parameter name="staramr-2-advanced.plength_pointfinder" defaultValue="95.0">
+      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/nml/staramr/staramr_search/0.4.0" parameterName="advanced.plength_pointfinder"/>
+    </parameter>
+    <parameter name="staramr-2-use_pointfinder.organism" defaultValue="salmonella">
+      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/nml/staramr/staramr_search/0.4.0" parameterName="use_pointfinder.organism"/>
+    </parameter>
+    <parameter name="staramr-2-advanced.exclude_resistance_phenotypes" defaultValue="false">
+      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/nml/staramr/staramr_search/0.4.0" parameterName="advanced.exclude_resistance_phenotypes"/>
+    </parameter>
+    <parameter name="staramr-2-advanced.report_all_blast" defaultValue="false">
+      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/nml/staramr/staramr_search/0.4.0" parameterName="advanced.report_all_blast"/>
+    </parameter>
+    <parameter name="staramr-2-advanced.pid_threshold" defaultValue="98.0">
+      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/nml/staramr/staramr_search/0.4.0" parameterName="advanced.pid_threshold"/>
+    </parameter>
+    <parameter name="rgi-3-low_quality" defaultValue="false">
+      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/card/rgi/rgi/4.2.2" parameterName="low_quality"/>
+    </parameter>
+    <parameter name="rgi-3-alignment_tool" defaultValue="diamond">
+      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/card/rgi/rgi/4.2.2" parameterName="alignment_tool"/>
+    </parameter>
+    <parameter name="rgi-3-data" defaultValue="NA">
+      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/card/rgi/rgi/4.2.2" parameterName="data"/>
+    </parameter>
+    <parameter name="rgi-3-include_loose" defaultValue="false">
+      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/card/rgi/rgi/4.2.2" parameterName="include_loose"/>
+    </parameter>
+  </parameters>
+  <outputs>
+    <output name="staramr-summary.tsv" fileName="staramr-summary.tsv"/>
+    <output name="rgi-summary.tsv" fileName="rgi-summary.tsv"/>
+    <output name="staramr-resfinder.tsv" fileName="staramr-resfinder.tsv"/>
+    <output name="staramr-excel.xlsx" fileName="staramr-excel.xlsx"/>
+    <output name="staramr-settings.txt" fileName="staramr-settings.txt"/>
+    <output name="shovill-contigs.fasta" fileName="shovill-contigs.fasta"/>
+    <output name="rgi-report.json" fileName="rgi-report.json"/>
+    <output name="shovill-std.log" fileName="shovill-std.log"/>
+  </outputs>
+  <toolRepositories>
+    <repository>
+      <name>shovill</name>
+      <owner>iuc</owner>
+      <url>https://toolshed.g2.bx.psu.edu</url>
+      <revision>865119fcb694</revision>
+    </repository>
+    <repository>
+      <name>rgi</name>
+      <owner>card</owner>
+      <url>https://toolshed.g2.bx.psu.edu</url>
+      <revision>715bc9aeef69</revision>
+    </repository>
+    <repository>
+      <name>staramr</name>
+      <owner>nml</owner>
+      <url>https://toolshed.g2.bx.psu.edu</url>
+      <revision>930893c83a1a</revision>
+    </repository>
+  </toolRepositories>
+</iridaWorkflow>
