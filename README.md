@@ -8,6 +8,8 @@ This project contains an [IRIDA][] plugin for a pipeline to perform AMR detectio
 
 Please download the provided `amr-detection-[version].jar` from the [releases][] page and copy to your `/etc/irida/plugins` directory.  Now you may start IRIDA and you should see the pipeline appear in your list of pipelines.
 
+*Note:* This plugin requires you to be running IRIDA version >= `19.01`. Please see the [IRIDA][] documentation for more details.
+
 ## Installing Galaxy Dependencies
 
 In order to use this pipeline, you will also have to install the [RGI][], [staramr][], and [shovill][] (for assembly) Galaxy tools within your Galaxy instance. These can be found at:
