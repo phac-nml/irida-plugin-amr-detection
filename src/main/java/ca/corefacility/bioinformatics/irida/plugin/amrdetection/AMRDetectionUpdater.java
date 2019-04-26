@@ -91,7 +91,7 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 		List<String> tokens = SPLITTER.splitToList(line);
 		if (tokens.size() != MAX_TOKENS) {
 			throw new PostProcessingException("Invalid number of columns in staramr results file [" + staramrFilePath
-					+ "], expected [" + MAX_TOKENS + "] got [" + tokens.size());
+					+ "], expected [" + MAX_TOKENS + "] got [" + tokens.size() + "]");
 		}
 
 		line = reader.readLine();
@@ -117,7 +117,7 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 	 * @throws IOException             If there was an issue reading the file.
 	 * @throws PostProcessingException If there was an issue parsing the file.
 	 */
-	private AMRResult getRgiEntries(Path rgiFilePath) throws IOException, PostProcessingException {
+	private AMRResult getRgiResults(Path rgiFilePath) throws IOException, PostProcessingException {
 		final int MAX_TOKENS = 23;
 
 		final int BEST_HIT_ARO_INDEX = 8;
@@ -134,10 +134,16 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 		BufferedReader reader = new BufferedReader(new FileReader(rgiFilePath.toFile()));
 
 		String line = reader.readLine();
-		// skip first (header) line
+
+		List<String> tokens = SPLITTER.splitToList(line);
+		if (tokens.size() != MAX_TOKENS) {
+			throw new PostProcessingException("Invalid number of columns in RGI results file [" + rgiFilePath
+					+ "], expected [" + MAX_TOKENS + "] got [" + tokens.size() + "]");
+		}
+
 		line = reader.readLine();
 		while (line != null) {
-			List<String> tokens = SPLITTER.splitToList(line);
+			tokens = SPLITTER.splitToList(line);
 
 			if (tokens.size() != MAX_TOKENS) {
 				line = reader.readLine();
@@ -195,7 +201,7 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 			String workflowVersion = iridaWorkflow.getWorkflowDescription().getVersion();
 
 			AMRResult staramrResult = getStarAMRResults(staramrFilePath);
-			AMRResult rgiResult = getRgiEntries(rgiFilePath);
+			AMRResult rgiResult = getRgiResults(rgiFilePath);
 
 			PipelineProvidedMetadataEntry staramrGenotypeEntry = new PipelineProvidedMetadataEntry(
 					staramrResult.getGenotype(), "text", analysis);
@@ -216,15 +222,14 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 
 			sample.mergeMetadata(metadataMap);
 			sampleService.updateFields(sample.getId(), ImmutableMap.of("metadata", sample.getMetadata()));
-		} catch (PostProcessingException e) {
-			// re-throw exception so we don't wrap it in a new exception at the end.
-			throw e;
 		} catch (IOException e) {
+			logger.error("Got IOException", e);
 			throw new PostProcessingException("Error parsing amr detection results", e);
 		} catch (IridaWorkflowNotFoundException e) {
+			logger.error("Got IridaWorkflowNotFoundException", e);
 			throw new PostProcessingException("Workflow is not found", e);
 		} catch (Exception e) {
-			logger.error("Exception", e);
+			logger.error("Got Exception", e);
 			throw e;
 		}
 	}
