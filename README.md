@@ -23,17 +23,69 @@ In order to use this pipeline, you will also have to install the [RGI][], [stara
 | staramr | `0.4.0` | <https://toolshed.g2.bx.psu.edu/view/nml/staramr/930893c83a1a> |
 | shovill | `1.0.4` | <https://toolshed.g2.bx.psu.edu/view/iuc/shovill/865119fcb694> |
 
-# Screenshots
+# Tutorial
 
-## Pipeline
+This tutorial shows how to run the **AMR Detection** pipeline in IRIDA.
+
+## Tutorial Data
+
+The pipeline requires as input paired-end sequence reads in FASTQ format. We will be using Illumina MiSeq data from a sample of **Campylobacter jejuni** for this tutorial with run ID `SRR8914694`. Paired-end fastq files can be downloaded from <https://www.ebi.ac.uk/ena/data/view/SRR8914694> (the **FASTQ files (FTP)** links). A collection additional example data can be found in the [IRIDA Sample Data][] package.
+
+## Adding Samples to the Cart
+
+Once samples are created for the data and the files are uploaded, you can select the samples you wish to run and add them to the cart by clicking the **Add to Cart** button.
+
+![add-to-cart.png][]
+
+Once you have selected your samples, you can click on the **Cart** button to move to selecting a pipeline.
+
+![cart-button.png][]
+
+## Selecting a Pipeline
+
+Once inside the cart, you should see a card for the **AMR Detection** pipeline.
 
 ![amr-pipeline.png][]
 
+Please click the **Select** button to proceed with the pipeline.
+
+## Selecting Parameters
+
+Once the pipeline is selected, the next page provides an overview of all the input files, as well as the option to modify parameters.
+
+![amr-detection-pipeline-page.png][]
+
+Please make sure the **Save AMR detection results to Project Line List Metadata** is selected so that results get saved to the Line List. Also, please click the **Customize** button so that we can modify the PointFinder parameters.
+
+![modify-parameters.png][]
+
+In particular, you may want to modify the **Select a pointfinder organism** parameter, changing the value to `campylobacter`. If you which to completely disable searching the PointFinder database, you can instead set **Enable scanning for point mutations using the PointFinder database** to `false`.
+
+Once all your parameters are set, you can click the **Ready to Launch?** button to launch the pipeline.
+
+![launch.png][]
+
+## Monitoring Pipeline Status
+
+To monitor the status of the launched pipeline, please select the **Analysis > Your Analyses** menu.
+
+![your-analyses.png][]
+
+From here, you can monitor the status of your pipeline.
+
+![monitor-analyses.png][]
+
 ## Analysis Results
+
+Once the analysis pipeline is finished, you can view the analysis results in your browser or download the files to your machine.
 
 ![amr-pipeline-results.png][]
 
+These results show you both the [staramr][] and [RGI][] AMR results on the data, assembled with [shovill][]. The staramr results show you the detected AMR genes in the **Genotype** column and the predicted drug resistances in the **Predicted Phenotype** column. The RGI results show you the predicted drug resistances in the **Best_Hit_ARO** column and the predicted drug resistances in the **Drug Class** column. For additional information, please see the detailed documentation of the respective projects.
+
 ## Metadata Table
+
+If you selected the **Save AMR detection results to Project Line List Metadata** option when launching the pipeline, then both the predicted AMR genes and drug resistances will be integrated into the IRIDA Line List/Metadata table as shown below.
 
 ![amr-pipeline-metadata.png][]
 
@@ -81,5 +133,13 @@ specific language governing permissions and limitations under the License.
 [amr-pipeline.png]: images/amr-pipeline.png
 [amr-pipeline-results.png]: images/amr-pipeline-results.png
 [amr-pipeline-metadata.png]: images/amr-pipeline-metadata.png
+[add-to-cart.png]: images/add-to-cart.png
+[cart-button.png]: images/cart-button.png
+[amr-detection-pipeline-page.png]: images/amr-detection-pipeline-page.png
+[modify-parameters.png]: images/modify-parameters.png
+[launch.png]: images/launch.png
+[your-analyses.png]: images/your-analyses.png
+[monitor-analyses.png]: images/monitor-analyses.png
 [releases]: https://github.com/phac-nml/irida-plugin-amr-detection/releases
 [pom.xml]: pom.xml
+[IRIDA Sample Data]: https://irida.corefacility.ca/downloads/data/irida-sample-data.zip
