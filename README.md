@@ -5,6 +5,23 @@
 
 This project contains an [IRIDA][] plugin for a pipeline to perform AMR detection using [RGI][] and [staramr][].
 
+* [IRIDA AMR Detection Pipeline](#irida-amr-detection-pipeline)
+* [Installation](#installation)
+    * [Installing to IRIDA](#installing-to-irida)
+    * [Installing Galaxy Dependencies](#installing-galaxy-dependencies)
+* [Tutorial](#tutorial)
+    * [Tutorial Data](#tutorial-data)
+    * [Adding Samples to the Cart](#adding-samples-to-the-cart)
+    * [Selecting a Pipeline](#selecting-a-pipeline)
+    * [Selecting Parameters](#selecting-parameters)
+    * [Monitoring Pipeline Status](#monitoring-pipeline-status)
+    * [Analysis Results](#analysis-results)
+    * [Metadata Table](#metadata-table)
+* [Building](#building)
+    * [Installing IRIDA Libraries](#installing-irida-libraries)
+    * [Building AMR Detection Plugin](#building-amr-detection-plugin)
+* [Legal](#legal)
+ 
 # Installation
 
 ## Installing to IRIDA
