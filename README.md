@@ -45,7 +45,7 @@ This tutorial shows how to run the **AMR Detection** pipeline in IRIDA.
 
 ## Tutorial Data
 
-The pipeline requires as input paired-end sequence reads in FASTQ format. We will be using Illumina MiSeq data from a sample of **Campylobacter jejuni** for this tutorial with run ID `SRR8914694`. Paired-end fastq files can be downloaded from <https://www.ebi.ac.uk/ena/data/view/SRR8914694> (the **FASTQ files (FTP)** links). A collection additional example data can be found in the [IRIDA Sample Data][] package.
+The pipeline requires as input paired-end sequence reads in FASTQ format. We will be using Illumina MiSeq data from a sample of **Campylobacter jejuni** for this tutorial with run ID `SRR8914694`. Paired-end fastq files can be downloaded from <https://www.ebi.ac.uk/ena/data/view/SRR8914694> (the **FASTQ files (FTP)** links). A collection of additional example data can be found in the [IRIDA Sample Data][] package.
 
 ## Adding Samples to the Cart
 
@@ -83,7 +83,7 @@ Once all your parameters are set, you can click the **Ready to Launch?** button 
 
 ## Monitoring Pipeline Status
 
-To monitor the status of the launched pipeline, please select the **Analysis > Your Analyses** menu.
+To monitor the status of the launched pipeline, please select the **Analyses > Your Analyses** menu.
 
 ![your-analyses.png][]
 
