@@ -217,11 +217,9 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 			stringEntries.put(appendVersion(METADATA_RGI_GENE, workflowVersion), rgiGenotypeEntry);
 			stringEntries.put(appendVersion(METADATA_RGI_DRUG_CLASS, workflowVersion), rgiDrugEntry);
 
-			Map<MetadataTemplateField, MetadataEntry> metadataMap = metadataTemplateService
-					.getMetadataMap(stringEntries);
-
-			sample.mergeMetadata(metadataMap);
-			sampleService.updateFields(sample.getId(), ImmutableMap.of("metadata", sample.getMetadata()));
+			Set<MetadataEntry> metadataSet = metadataTemplateService.convertMetadataStringsToSet(stringEntries);
+			
+			sampleService.mergeSampleMetadata(sample,metadataSet);
 		} catch (IOException e) {
 			logger.error("Got IOException", e);
 			throw new PostProcessingException("Error parsing amr detection results", e);
