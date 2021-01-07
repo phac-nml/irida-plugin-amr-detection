@@ -5,18 +5,18 @@
   <version>0.2.0</version>
   <analysisType>AMR_DETECTION</analysisType>
   <inputs>
-    <sequenceReadsPaired/>
+    <sequenceReadsPaired>sequence_reads_paired</sequenceReadsPaired>
     <requiresSingleSample>true</requiresSingleSample>
   </inputs>
   <parameters>
-    <parameter name="shovill-1-library.lib_type" defaultValue="collection">
-      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/iuc/shovill/shovill/1.1.0+galaxy0" parameterName="library.lib_type"/>
-    </parameter>
     <parameter name="shovill-1-adv.nocorr" defaultValue="false">
       <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/iuc/shovill/shovill/1.1.0+galaxy0" parameterName="adv.nocorr"/>
     </parameter>
     <parameter name="shovill-1-adv.mincov" defaultValue="1">
       <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/iuc/shovill/shovill/1.1.0+galaxy0" parameterName="adv.mincov"/>
+    </parameter>
+    <parameter name="shovill-1-trim" defaultValue="false">
+      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/iuc/shovill/shovill/1.1.0+galaxy0" parameterName="trim"/>
     </parameter>
     <parameter name="shovill-1-adv.namefmt" defaultValue="contig%05d">
       <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/iuc/shovill/shovill/1.1.0+galaxy0" parameterName="adv.namefmt"/>
@@ -33,7 +33,7 @@
     <parameter name="shovill-1-adv.opts" defaultValue="">
       <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/iuc/shovill/shovill/1.1.0+galaxy0" parameterName="adv.opts"/>
     </parameter>
-    <parameter name="shovill-1-adv.minlen" defaultValue="300">
+    <parameter name="shovill-1-adv.minlen" defaultValue="1">
       <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/iuc/shovill/shovill/1.1.0+galaxy0" parameterName="adv.minlen"/>
     </parameter>
     <parameter name="shovill-1-assembler" defaultValue="spades">
@@ -87,14 +87,8 @@
     <parameter name="staramr-2-advanced.pid_threshold" defaultValue="98.0">
       <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/nml/staramr/staramr_search/0.7.1+galaxy2" parameterName="advanced.pid_threshold"/>
     </parameter>
-    <parameter name="rgi-3-db_opts.db_opts_selector" defaultValue="default">
-      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/card/rgi/rgi/5.1.1" parameterName="db_opts.db_opts_selector"/>
-    </parameter>
-    <parameter name="rgi-3-db_opts.rgi_db_local" defaultValue="">
-      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/card/rgi/rgi/5.1.1" parameterName="db_opts.rgi_db_local"/>
-    </parameter>
-    <parameter name="rgi-3-db_opts.rgi_db_hist" defaultValue="">
-      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/card/rgi/rgi/5.1.1" parameterName="db_opts.rgi_db_hist"/>
+    <parameter name="rgi-3-low_quality" defaultValue="false">
+      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/card/rgi/rgi/5.1.1" parameterName="low_quality"/>
     </parameter>
     <parameter name="rgi-3-alignment_tool" defaultValue="diamond">
       <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/card/rgi/rgi/5.1.1" parameterName="alignment_tool"/>
@@ -102,22 +96,31 @@
     <parameter name="rgi-3-data" defaultValue="NA">
       <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/card/rgi/rgi/5.1.1" parameterName="data"/>
     </parameter>
+    <parameter name="rgi-3-include_loose" defaultValue="false">
+      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/card/rgi/rgi/5.1.1" parameterName="include_loose"/>
+    </parameter>
   </parameters>
   <outputs>
+    <output name="staramr-summary.tsv" fileName="staramr-summary.tsv"/>
+    <output name="staramr-detailed-summary.tsv" fileName="staramr-detailed-summary.tsv"/>
+    <output name="rgi-summary.tsv" fileName="rgi-summary.tsv"/>
+    <output name="staramr-resfinder.tsv" fileName="staramr-resfinder.tsv"/>
+    <output name="staramr-plasmidfinder.tsv" fileName="staramr-plasmidfinder.tsv"/>
+    <output name="staramr-mlst.tsv" fileName="staramr-mlst.tsv"/>
+    <output name="staramr-excel.xlsx" fileName="staramr-excel.xlsx"/>
+    <output name="staramr-settings.txt" fileName="staramr-settings.txt"/>
     <output name="shovill-contigs.fasta" fileName="shovill-contigs.fasta"/>
     <output name="shovill-contigs.gfa" fileName="shovill-contigs.gfa"/>
-    <output name="shovill-std.log" fileName="shovill-std.log"/>
-    <output name="staramr-detailed-summary.tsv" fileName="staramr-detailed-summary.tsv"/>
-    <output name="staramr-excel.xlsx" fileName="staramr-excel.xlsx"/>
-    <output name="staramr-mlst.tsv" fileName="staramr-mlst.tsv"/>
-    <output name="staramr-plasmidfinder.tsv" fileName="staramr-plasmidfinder.tsv"/>
-    <output name="staramr-resfinder.tsv" fileName="staramr-resfinder.tsv"/>
-    <output name="staramr-settings.txt" fileName="staramr-settings.txt"/>
-    <output name="staramr-summary.tsv" fileName="staramr-summary.tsv"/>
     <output name="rgi-report.json" fileName="rgi-report.json"/>
-    <output name="rgi-summary.tsv" fileName="rgi-summary.tsv"/>
+    <output name="shovill-std.log" fileName="shovill-std.log"/>
   </outputs>
   <toolRepositories>
+    <repository>
+      <name>shovill</name>
+      <owner>iuc</owner>
+      <url>https://toolshed.g2.bx.psu.edu</url>
+      <revision>83ead2be47b2</revision>
+    </repository>
     <repository>
       <name>rgi</name>
       <owner>card</owner>
@@ -129,12 +132,6 @@
       <owner>nml</owner>
       <url>https://toolshed.g2.bx.psu.edu</url>
       <revision>2fd4d4c9c5c2</revision>
-    </repository>
-    <repository>
-      <name>shovill</name>
-      <owner>iuc</owner>
-      <url>https://toolshed.g2.bx.psu.edu</url>
-      <revision>83ead2be47b2</revision>
     </repository>
   </toolRepositories>
 </iridaWorkflow>
