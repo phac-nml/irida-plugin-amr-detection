@@ -103,7 +103,7 @@ Once the analysis pipeline is finished, you can view the analysis results in you
 
 ![amr-pipeline-results.png][]
 
-These results show you both the [staramr][] and [RGI][] AMR results on the data, assembled with [shovill][]. The staramr results show you the detected AMR genes in the **Genotype** column and the predicted drug resistances in the **Predicted Phenotype** column along with a lot of additional information. The RGI results show you the predicted drug resistances in the **Best_Hit_ARO** column and the predicted drug resistances in the **Drug Class** column. For additional information, please see the detailed documentation of the respective projects.
+These results show you both the [staramr][] and [RGI][] AMR results on the data, assembled with [shovill][]. The staramr results are all contained within a single Excel file shown here, which lists the detected antimicrobial resistance genes, MLST sequence type, plasmid incompatibility factors among other information. For details on how to interpret these, please see the documentation of the respective projects.
 
 ## Metadata Table
 
