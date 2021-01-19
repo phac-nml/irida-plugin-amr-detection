@@ -27,17 +27,17 @@ This project contains an [IRIDA][] plugin for a pipeline to perform AMR detectio
 
 Please download the provided `amr-detection-[version].jar` from the [releases][] page and copy to your `/etc/irida/plugins` directory.  Now you may start IRIDA and you should see the pipeline appear in your list of pipelines.
 
-*Note:* This plugin requires you to be running IRIDA version >= `19.01`. Please see the [IRIDA][] documentation for more details.
+*Note:* This plugin requires you to be running IRIDA version >= `21.01`. Please see the [IRIDA][] documentation for more details.
 
 ## Installing Galaxy Dependencies
 
 In order to use this pipeline, you will also have to install the [RGI][], [staramr][], and [shovill][] (for assembly) Galaxy tools within your Galaxy instance. These can be found at:
 
-| Name    | Version  | Galaxy Tool                                                    |
-|---------|----------|----------------------------------------------------------------|
-| RGI     | `4.2.2` | <https://toolshed.g2.bx.psu.edu/view/card/rgi/715bc9aeef69>    |
-| staramr | `0.4.0` | <https://toolshed.g2.bx.psu.edu/view/nml/staramr/930893c83a1a> |
-| shovill | `1.0.4` | <https://toolshed.g2.bx.psu.edu/view/iuc/shovill/865119fcb694> |
+| Name    | Version          | Galaxy Tool                                                    |
+|---------|------------------|----------------------------------------------------------------|
+| RGI     | `5.1.1`          | <https://toolshed.g2.bx.psu.edu/view/card/rgi/bfbfc24c5af2>    |
+| staramr | `0.7.1+galaxy2`  | <https://toolshed.g2.bx.psu.edu/view/nml/staramr/2fd4d4c9c5c2> |
+| shovill | `1.1.0+galaxy0`  | <https://toolshed.g2.bx.psu.edu/view/iuc/shovill/83ead2be47b2> |
 
 # Tutorial
 
@@ -75,7 +75,13 @@ Please make sure the **Save AMR detection results to Project Line List Metadata*
 
 ![modify-parameters.png][]
 
-In particular, you may want to modify the **Select a pointfinder organism** parameter, changing the value to `campylobacter`. If you which to completely disable searching the PointFinder database, you can instead set **Enable scanning for point mutations using the PointFinder database** to `false`.
+In particular, you may want to modify the **Scan for point mutations using the selected PointFinder database** parameter, changing the value to `campylobacter`. If you which to completely disable searching the PointFinder database, you can instead set this to `disabled` (the default value).
+
+If you know the organism you may also want to set the lower/upper bounds for the genome length. This only impacts the output of the quality module (which checks if the assembled genome is within these bounds). In this case the organism is *Campylobacter jejuni* so let's set the lower bound to `1400000` and upper bound to `1900000`.
+
+![parameters-lower-bound.png][]
+
+![parameters-upper-bound.png][]
 
 Once all your parameters are set, you can click the **Ready to Launch?** button to launch the pipeline.
 
@@ -97,7 +103,7 @@ Once the analysis pipeline is finished, you can view the analysis results in you
 
 ![amr-pipeline-results.png][]
 
-These results show you both the [staramr][] and [RGI][] AMR results on the data, assembled with [shovill][]. The staramr results show you the detected AMR genes in the **Genotype** column and the predicted drug resistances in the **Predicted Phenotype** column. The RGI results show you the predicted drug resistances in the **Best_Hit_ARO** column and the predicted drug resistances in the **Drug Class** column. For additional information, please see the detailed documentation of the respective projects.
+These results show you both the [staramr][] and [RGI][] AMR results on the data, assembled with [shovill][]. The staramr results are all contained within a single Excel file shown here, which lists the detected antimicrobial resistance genes, MLST sequence type, plasmid incompatibility factors among other information. For details on how to interpret these, please see the documentation of the respective projects.
 
 ## Metadata Table
 
@@ -109,7 +115,7 @@ If you selected the **Save AMR detection results to Project Line List Metadata**
 
 ## Installing IRIDA Libraries
 
-To build this plugin yourself, you must first install [IRIDA][] to your local Maven repository. Please make sure you are installing the IRIDA version defined in the `irida.version.compiletime` property in the [pom.xml][] file (e.g., `19.01.3`). Or, alternatively, please update the IRIDA dependency version in the `pom.xml` file.
+To build this plugin yourself, you must first install [IRIDA][] to your local Maven repository. Please make sure you are installing the IRIDA version defined in the `irida.version.compiletime` property in the [pom.xml][] file (e.g., `21.01`). Or, alternatively, please update the IRIDA dependency version in the `pom.xml` file.
 
 To install the IRIDA libraries to a local Maven repository, please run the following from within the [IRIDA][] project (the `irida/` directory):
 
@@ -149,6 +155,8 @@ specific language governing permissions and limitations under the License.
 [amr-pipeline.png]: images/amr-pipeline.png
 [amr-pipeline-results.png]: images/amr-pipeline-results.png
 [amr-pipeline-metadata.png]: images/amr-pipeline-metadata.png
+[parameters-lower-bound.png]: images/parameters-lower-bound.png
+[parameters-upper-bound.png]: images/parameters-upper-bound.png
 [add-to-cart.png]: images/add-to-cart.png
 [cart-button.png]: images/cart-button.png
 [amr-detection-pipeline-page.png]: images/amr-detection-pipeline-page.png
