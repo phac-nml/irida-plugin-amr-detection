@@ -50,7 +50,7 @@ public class AMRDetectionPlugin extends Plugin {
 
 		@Override
 		public UUID getDefaultWorkflowUUID() {
-			return UUID.fromString("b1a0fd27-2948-41c1-aecc-8f541f1d5dbd");
+			return UUID.fromString("338c48c9-7a4b-43f3-8ef9-cb217509cf53");
 		}
 
 		@Override

@@ -6,21 +6,22 @@
 
 	<groupId>ca.corefacility.bioinformatics.irida</groupId>
 	<artifactId>amr-detection</artifactId>
-	<version>0.1.0</version>
+	<version>0.2.0</version>
 
 	<properties>
 		<plugin.id>amr-detection</plugin.id>
 		<plugin.class>ca.corefacility.bioinformatics.irida.plugin.amrdetection.AMRDetectionPlugin</plugin.class>
-		<plugin.version>0.1.0</plugin.version>
+		<plugin.version>0.2.0</plugin.version>
 		<plugin.provider>Aaron Petkau</plugin.provider>
 		<plugin.dependencies></plugin.dependencies>
-		<plugin.requires.runtime>1.0.0</plugin.requires.runtime>
+		<plugin.requires.runtime>1.1.0</plugin.requires.runtime>
 
 		<pf4j.version>2.4.0</pf4j.version>
 
-		<java.version>1.8</java.version>
+		<java.version>11</java.version>
+		<maven.compiler.release>11</maven.compiler.release>
 		
-		<irida.version.compiletime>19.01.3</irida.version.compiletime>
+		<irida.version.compiletime>21.01</irida.version.compiletime>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
