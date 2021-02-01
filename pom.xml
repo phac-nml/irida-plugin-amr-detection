@@ -21,7 +21,7 @@
 		<java.version>11</java.version>
 		<maven.compiler.release>11</maven.compiler.release>
 		
-		<irida.version.compiletime>21.01-SNAPSHOT</irida.version.compiletime>
+		<irida.version.compiletime>21.01</irida.version.compiletime>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
