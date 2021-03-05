@@ -36,7 +36,7 @@ In order to use this pipeline, you will also have to install the [RGI][], [stara
 | Name    | Version          | Galaxy Tool                                                    |
 |---------|------------------|----------------------------------------------------------------|
 | RGI     | `5.1.1`          | <https://toolshed.g2.bx.psu.edu/view/card/rgi/bfbfc24c5af2>    |
-| staramr | `0.7.1+galaxy2`  | <https://toolshed.g2.bx.psu.edu/view/nml/staramr/2fd4d4c9c5c2> |
+| staramr | `0.7.2+galaxy0`  | <https://toolshed.g2.bx.psu.edu/view/nml/staramr/4b9a8031ab74> |
 | shovill | `1.1.0+galaxy0`  | <https://toolshed.g2.bx.psu.edu/view/iuc/shovill/83ead2be47b2> |
 
 # Tutorial

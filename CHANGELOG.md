@@ -2,7 +2,7 @@
 
 * Updated writing of metadata to be compatible with IRIDA `21.01` update.
    * This means the plugin now requires IRIDA `21.01+`.
-* Updated staramr version to `0.7.1`.
+* Updated staramr version to `0.7.2`.
    * The plugin will now save the additional fields provided by the newer staramr version in the metadata table.
 * Updated RGI version to `5.1.1`.
 * Updated Shovill to version `1.1.0`.
