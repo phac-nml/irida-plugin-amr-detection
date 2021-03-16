@@ -194,24 +194,31 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 			line = reader.readLine();
 		}
 
-		if (!genotypes.isEmpty()) {
+		String genotypesString = "-";
+		String drugsString = "-";
+
+		if (genotypes.isEmpty()) {
+			logger.info("No genotype results found in rgi output file [" + rgiFilePath + "], for analysis submission " + analysis);
+		} else {
 			Collections.sort(genotypes);
 
-			String genotypesString = joiner.join(genotypes);
+			genotypesString = joiner.join(genotypes);
+		}
 
+		if (drugs.isEmpty()) {
+			logger.info("No drug results found in rgi output file [" + rgiFilePath + "], for analysis submission " + analysis);
+		} else {
 			Set<String> drugsSet = Sets.newTreeSet();
 			drugs.forEach(t -> drugsSet.addAll(Lists.newArrayList(t.split(DRUG_CLASS_SPLIT))));
 
-			String drugsString = joiner.join(drugsSet);
-
-			Map<String, PipelineProvidedMetadataEntry> results = new HashMap<>();
-			results.put(RGI_GENE, new PipelineProvidedMetadataEntry(genotypesString, "text", analysis));
-			results.put(RGI_DRUG_CLASS, new PipelineProvidedMetadataEntry(drugsString, "text", analysis));
-
-			return results;
-		} else {
-			throw new PostProcessingException("No results found in rgi output file [" + rgiFilePath + "]");
+			drugsString = joiner.join(drugsSet);
 		}
+
+		Map<String, PipelineProvidedMetadataEntry> results = new HashMap<>();
+		results.put(RGI_GENE, new PipelineProvidedMetadataEntry(genotypesString, "text", analysis));
+		results.put(RGI_DRUG_CLASS, new PipelineProvidedMetadataEntry(drugsString, "text", analysis));
+
+		return results;
 	}
 
 	/**
