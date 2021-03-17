@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -18,9 +17,9 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.google.common.collect.ImmutableMap;
 
 import ca.corefacility.bioinformatics.irida.exceptions.IridaWorkflowNotFoundException;
 import ca.corefacility.bioinformatics.irida.exceptions.PostProcessingException;
@@ -91,6 +90,47 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 	}
 
 	/**
+	 * Parses a line of the results file and gets a Map linking the column to the
+	 * value in the line. (e.g., "N50 value" => "100").
+	 * 
+	 * @param columnNames        A List of names of the columns in the results file.
+	 * @param line               The line to parse.
+	 * @param singleColumnPrefix A prefix for a special case in the staramr results
+	 *                           where the column prefix is constant but the suffix
+	 *                           changes. Set to null to ignore.
+	 * @param resultsFile        The specific file being parsed (for error
+	 *                           messages).
+	 * @param analysis           The analysis submission being parsed (for error
+	 *                           messages).
+	 * @return A Map linking the column to the value for the line.
+	 * @throws PostProcessingException If there was an error parsing the results.
+	 */
+	private Map<String, String> getDataMapForLine(List<String> columnNames, String line, String singleColumnPrefix,
+			Path resultsFile, AnalysisSubmission analysis) throws PostProcessingException {
+		Map<String, String> dataMap = new HashMap<>();
+
+		List<String> values = SPLITTER.splitToList(line);
+
+		if (columnNames.size() != values.size()) {
+			throw new PostProcessingException("Mismatch in number of column names [" + columnNames.size()
+					+ "] and number of files [" + values.size() + "] in results file [" + resultsFile + "]");
+		}
+
+		for (int i = 0; i < columnNames.size(); i++) {
+			String column = columnNames.get(i);
+			String value = values.get(i);
+
+			if (singleColumnPrefix != null && column.startsWith(singleColumnPrefix)) {
+				dataMap.put(singleColumnPrefix, value);
+			} else {
+				dataMap.put(column, value);
+			}
+		}
+
+		return dataMap;
+	}
+
+	/**
 	 * Gets the staramr results from the given output file.
 	 * 
 	 * @param staramrFilePath The staramr output file containing the results.
@@ -105,7 +145,7 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 		final int MIN_TOKENS = 2;
 
 		Map<String, PipelineProvidedMetadataEntry> results = new HashMap<>();
-		Map<String, String> dataMap = new HashMap<>();
+		Map<String, String> dataMap;
 
 		@SuppressWarnings("resource")
 		BufferedReader reader = new BufferedReader(new FileReader(staramrFilePath.toFile()));
@@ -118,29 +158,12 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 
 		line = reader.readLine();
 
-		List<String> values = new ArrayList<>();
 		if (line == null || line.length() == 0) {
+			dataMap = new HashMap<>();
 			logger.info(
 					"Got empty results for staramr file [" + staramrFilePath + "] for analysis submission " + analysis);
 		} else {
-			values = SPLITTER.splitToList(line);
-
-			if (columnNames.size() != values.size()) {
-				throw new PostProcessingException(
-						"Mismatch in number of column names [" + columnNames.size() + "] and number of files ["
-								+ values.size() + "] in staramr results file [" + staramrFilePath + "]");
-			}
-
-			for (int i = 0; i < columnNames.size(); i++) {
-				String column = columnNames.get(i);
-				String value = values.get(i);
-
-				if (column.startsWith(STARAMR_RESULTS_CONTIGS_PREFIX)) {
-					dataMap.put(STARAMR_RESULTS_CONTIGS_PREFIX, value);
-				} else {
-					dataMap.put(column, value);
-				}
-			}
+			dataMap = getDataMapForLine(columnNames, line, STARAMR_RESULTS_CONTIGS_PREFIX, staramrFilePath, analysis);
 		}
 
 		for (String resultsFieldName : STARAMR_RESULTS_METADATA_MAP.keySet()) {
