@@ -70,6 +70,15 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 		.put("staramr/number-contigs"    , STARAMR_RESULTS_CONTIGS_PREFIX)
 		.build();
 	//@formatter:on
+	
+	// Maps IRIDA metadata field name to the column name of the RGI results
+	// (e.g., "rgi/gene" => "Best_Hit_ARO")
+	//@formatter:off
+	private static final Map<String, String> RGI_RESULTS_METADATA_MAP = ImmutableMap.<String, String>builder()
+		.put(RGI_GENE      , "Best_Hit_ARO")
+		.put(RGI_DRUG_CLASS, "Drug Class")
+		.build();
+	//@formatter:on
 
 	private MetadataTemplateService metadataTemplateService;
 	private SampleService sampleService;
@@ -195,11 +204,6 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 	 */
 	private Map<String, PipelineProvidedMetadataEntry> getRgiResults(Path rgiFilePath, AnalysisSubmission analysis)
 			throws IOException, PostProcessingException {
-		final int MAX_TOKENS = 25;
-
-		final int BEST_HIT_ARO_INDEX = 8;
-		final int DRUG_CLASS_INDEX = 14;
-
 		final String DRUG_CLASS_SPLIT = ";";
 
 		final Joiner joiner = Joiner.on(", ");
@@ -212,26 +216,22 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 
 		String line = reader.readLine();
 
-		List<String> tokens = SPLITTER.splitToList(line);
-		if (tokens.size() != MAX_TOKENS) {
-			throw new PostProcessingException("Invalid number of columns in RGI results file [" + rgiFilePath
-					+ "], expected [" + MAX_TOKENS + "] got [" + tokens.size() + "]");
+		List<String> columnNames = SPLITTER.splitToList(line);
+		if (columnNames.isEmpty()) {
+			logger.warn("Missing columns in RGI results file [" + rgiFilePath + "] for analysis submission " + analysis);
 		}
 
 		line = reader.readLine();
 		while (line != null) {
-			tokens = SPLITTER.splitToList(line);
-
-			if (tokens.size() != MAX_TOKENS) {
-				line = reader.readLine();
-				continue;
+			Map<String, String> lineDataMap = getDataMapForLine(columnNames, line, null, rgiFilePath, analysis);
+			
+			if (lineDataMap.containsKey(RGI_RESULTS_METADATA_MAP.get(RGI_GENE))) {
+				genotypes.add(lineDataMap.get(RGI_RESULTS_METADATA_MAP.get(RGI_GENE)));
 			}
-
-			String genotype = tokens.get(BEST_HIT_ARO_INDEX);
-			String drugClass = tokens.get(DRUG_CLASS_INDEX);
-
-			genotypes.add(genotype);
-			drugs.add(drugClass);
+			
+			if (lineDataMap.containsKey(RGI_RESULTS_METADATA_MAP.get(RGI_DRUG_CLASS))) {
+				drugs.add(lineDataMap.get(RGI_RESULTS_METADATA_MAP.get(RGI_DRUG_CLASS)));
+			}
 
 			line = reader.readLine();
 		}
