@@ -51,10 +51,13 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 	private static final String RGI_GENE = "rgi/gene";
 	//
 	// The "Number of Contigs" column is a special case since the name can change
-	// (e.g., the full name is like "Number of Contigs Greater Than Or Equal To 300 bp" where "300 bp" can change).
+	// (e.g., the full name is like "Number of Contigs Greater Than Or Equal To 300
+	// bp" where "300 bp" can change).
 	private static final String STARAMR_RESULTS_CONTIGS_PREFIX = "Number of Contigs Greater Than Or Equal To";
 
-	// Maps IRIDA metadata field name to the column name of the staramr results (e.g., "staramr/quality" => "Quality Module")
+	// Maps IRIDA metadata field name to the column name of the staramr results
+	// (e.g., "staramr/quality" => "Quality Module")
+	//@formatter:off
 	private static final Map<String, String> STARAMR_RESULTS_METADATA_MAP = ImmutableMap.<String, String>builder()
 		.put("staramr/quality"           , "Quality Module")
 		.put("staramr/gene"              , "Genotype")
@@ -67,7 +70,7 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 		.put("staramr/quality-feedback"  , "Quality Module Feedback")
 		.put("staramr/number-contigs"    , STARAMR_RESULTS_CONTIGS_PREFIX)
 		.build();
-
+	//@formatter:on
 
 	private MetadataTemplateService metadataTemplateService;
 	private SampleService sampleService;
@@ -102,7 +105,7 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 		final int MIN_TOKENS = 2;
 
 		Map<String, PipelineProvidedMetadataEntry> results = new HashMap<>();
-		Map<String,String> dataMap = new HashMap<>();
+		Map<String, String> dataMap = new HashMap<>();
 
 		@SuppressWarnings("resource")
 		BufferedReader reader = new BufferedReader(new FileReader(staramrFilePath.toFile()));
@@ -117,18 +120,21 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 
 		List<String> values = new ArrayList<>();
 		if (line == null || line.length() == 0) {
-			logger.info("Got empty results for staramr file [" + staramrFilePath + "] for analysis submission " + analysis);
-		} else { 
+			logger.info(
+					"Got empty results for staramr file [" + staramrFilePath + "] for analysis submission " + analysis);
+		} else {
 			values = SPLITTER.splitToList(line);
-	
+
 			if (columnNames.size() != values.size()) {
-				throw new PostProcessingException("Mismatch in number of column names [" + columnNames.size() + "] and number of files [" + values.size() + "] in staramr results file [" + staramrFilePath + "]");
+				throw new PostProcessingException(
+						"Mismatch in number of column names [" + columnNames.size() + "] and number of files ["
+								+ values.size() + "] in staramr results file [" + staramrFilePath + "]");
 			}
 
 			for (int i = 0; i < columnNames.size(); i++) {
 				String column = columnNames.get(i);
 				String value = values.get(i);
-	
+
 				if (column.startsWith(STARAMR_RESULTS_CONTIGS_PREFIX)) {
 					dataMap.put(STARAMR_RESULTS_CONTIGS_PREFIX, value);
 				} else {
@@ -137,7 +143,7 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 			}
 		}
 
-		for (String resultsFieldName: STARAMR_RESULTS_METADATA_MAP.keySet()) {
+		for (String resultsFieldName : STARAMR_RESULTS_METADATA_MAP.keySet()) {
 			String staramrColumnName = STARAMR_RESULTS_METADATA_MAP.get(resultsFieldName);
 			String value = dataMap.containsKey(staramrColumnName) ? dataMap.get(staramrColumnName) : "-";
 
@@ -211,7 +217,8 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 		String drugsString = "-";
 
 		if (genotypes.isEmpty()) {
-			logger.info("No genotype results found in rgi output file [" + rgiFilePath + "], for analysis submission " + analysis);
+			logger.info("No genotype results found in rgi output file [" + rgiFilePath + "], for analysis submission "
+					+ analysis);
 		} else {
 			Collections.sort(genotypes);
 
@@ -219,7 +226,8 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 		}
 
 		if (drugs.isEmpty()) {
-			logger.info("No drug results found in rgi output file [" + rgiFilePath + "], for analysis submission " + analysis);
+			logger.info("No drug results found in rgi output file [" + rgiFilePath + "], for analysis submission "
+					+ analysis);
 		} else {
 			Set<String> drugsSet = Sets.newTreeSet();
 			drugs.forEach(t -> drugsSet.addAll(Lists.newArrayList(t.split(DRUG_CLASS_SPLIT))));
