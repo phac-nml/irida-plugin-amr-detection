@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
@@ -47,17 +48,37 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 
 	private static final String RGI_DRUG_CLASS = "rgi/drug-class";
 	private static final String RGI_GENE = "rgi/gene";
+	//
+	// The "Number of Contigs" column is a special case since the name can change
+	// (e.g., the full name is like "Number of Contigs Greater Than Or Equal To 300
+	// bp" where "300 bp" can change).
+	private static final String STARAMR_RESULTS_CONTIGS_PREFIX = "Number of Contigs Greater Than Or Equal To";
 
-	private static final String STARAMR_QUALITY_MODULE = "staramr/quality";
-	private static final String STARAMR_GENE = "staramr/gene";
-	private static final String STARAMR_DRUG_CLASS = "staramr/drug-class";
-	private static final String STARAMR_PLASMID = "staramr/plasmid";
-	private static final String STARAMR_MLST_SCHEME = "staramr/mlst-scheme";
-	private static final String STARAMR_MLST_TYPE = "staramr/mlst-sequence-type";
-	private static final String STARAMR_GENOME_LENGTH = "staramr/genome-length";
-	private static final String STARAMR_N50 = "staramr/n50";
-	private static final String STARAMR_NUMBER_CONTIGS = "staramr/number-contigs";
-	private static final String STARAMR_QUALITY_FEEDBACK = "staramr/quality-feedback";
+	// Maps IRIDA metadata field name to the column name of the staramr results
+	// (e.g., "staramr/quality" => "Quality Module")
+	//@formatter:off
+	private static final Map<String, String> STARAMR_RESULTS_METADATA_MAP = ImmutableMap.<String, String>builder()
+		.put("staramr/quality"           , "Quality Module")
+		.put("staramr/gene"              , "Genotype")
+		.put("staramr/drug-class"        , "Predicted Phenotype")
+		.put("staramr/plasmid"           , "Plasmid")
+		.put("staramr/mlst-scheme"       , "Scheme")
+		.put("staramr/mlst-sequence-type", "Sequence Type")
+		.put("staramr/genome-length"     , "Genome Length")
+		.put("staramr/n50"               , "N50 value")
+		.put("staramr/quality-feedback"  , "Quality Module Feedback")
+		.put("staramr/number-contigs"    , STARAMR_RESULTS_CONTIGS_PREFIX)
+		.build();
+	//@formatter:on
+	
+	// Maps IRIDA metadata field name to the column name of the RGI results
+	// (e.g., "rgi/gene" => "Best_Hit_ARO")
+	//@formatter:off
+	private static final Map<String, String> RGI_RESULTS_METADATA_MAP = ImmutableMap.<String, String>builder()
+		.put(RGI_GENE      , "Best_Hit_ARO")
+		.put(RGI_DRUG_CLASS, "Drug Class")
+		.build();
+	//@formatter:on
 
 	private MetadataTemplateService metadataTemplateService;
 	private SampleService sampleService;
@@ -78,6 +99,47 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 	}
 
 	/**
+	 * Parses a line of the results file and gets a Map linking the column to the
+	 * value in the line. (e.g., "N50 value" => "100").
+	 * 
+	 * @param columnNames        A List of names of the columns in the results file.
+	 * @param line               The line to parse.
+	 * @param singleColumnPrefix A prefix for a special case in the staramr results
+	 *                           where the column prefix is constant but the suffix
+	 *                           changes. Set to null to ignore.
+	 * @param resultsFile        The specific file being parsed (for error
+	 *                           messages).
+	 * @param analysis           The analysis submission being parsed (for error
+	 *                           messages).
+	 * @return A Map linking the column to the value for the line.
+	 * @throws PostProcessingException If there was an error parsing the results.
+	 */
+	private Map<String, String> getDataMapForLine(List<String> columnNames, String line, String singleColumnPrefix,
+			Path resultsFile, AnalysisSubmission analysis) throws PostProcessingException {
+		Map<String, String> dataMap = new HashMap<>();
+
+		List<String> values = SPLITTER.splitToList(line);
+
+		if (columnNames.size() != values.size()) {
+			throw new PostProcessingException("Mismatch in number of column names [" + columnNames.size()
+					+ "] and number of files [" + values.size() + "] in results file [" + resultsFile + "]");
+		}
+
+		for (int i = 0; i < columnNames.size(); i++) {
+			String column = columnNames.get(i);
+			String value = values.get(i);
+
+			if (singleColumnPrefix != null && column.startsWith(singleColumnPrefix)) {
+				dataMap.put(singleColumnPrefix, value);
+			} else {
+				dataMap.put(column, value);
+			}
+		}
+
+		return dataMap;
+	}
+
+	/**
 	 * Gets the staramr results from the given output file.
 	 * 
 	 * @param staramrFilePath The staramr output file containing the results.
@@ -89,47 +151,36 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 	 */
 	private Map<String, PipelineProvidedMetadataEntry> getStarAMRResults(Path staramrFilePath,
 			AnalysisSubmission analysis) throws IOException, PostProcessingException {
-		final int QUALITY_MODULE = 1;
-		final int GENOTYPE = 2;
-		final int DRUG = 3;
-		final int PLASMID = 4;
-		final int MLST_SCHEME = 5;
-		final int MLST_SEQUENCE_TYPE = 6;
-		final int GENOME_LENGTH = 7;
-		final int N50 = 8;
-		final int NUMBER_CONTIGS = 9;
-		final int QUALITY_FEEDBACK = 10;
-
-		final int MAX_TOKENS = 11;
+		final int MIN_TOKENS = 2;
 
 		Map<String, PipelineProvidedMetadataEntry> results = new HashMap<>();
+		Map<String, String> dataMap;
 
 		@SuppressWarnings("resource")
 		BufferedReader reader = new BufferedReader(new FileReader(staramrFilePath.toFile()));
 		String line = reader.readLine();
-		List<String> tokens = SPLITTER.splitToList(line);
-		if (tokens.size() != MAX_TOKENS) {
+		List<String> columnNames = SPLITTER.splitToList(line);
+		if (columnNames.size() < MIN_TOKENS) {
 			throw new PostProcessingException("Invalid number of columns in staramr results file [" + staramrFilePath
-					+ "], expected [" + MAX_TOKENS + "] got [" + tokens.size() + "]");
+					+ "], expected at least [" + MIN_TOKENS + "] got [" + columnNames.size() + "]");
 		}
 
 		line = reader.readLine();
-		tokens = SPLITTER.splitToList(line);
-		results.put(STARAMR_QUALITY_MODULE,
-				new PipelineProvidedMetadataEntry(tokens.get(QUALITY_MODULE), "text", analysis));
-		results.put(STARAMR_GENE, new PipelineProvidedMetadataEntry(tokens.get(GENOTYPE), "text", analysis));
-		results.put(STARAMR_DRUG_CLASS, new PipelineProvidedMetadataEntry(tokens.get(DRUG), "text", analysis));
-		results.put(STARAMR_PLASMID, new PipelineProvidedMetadataEntry(tokens.get(PLASMID), "text", analysis));
-		results.put(STARAMR_MLST_SCHEME, new PipelineProvidedMetadataEntry(tokens.get(MLST_SCHEME), "text", analysis));
-		results.put(STARAMR_MLST_TYPE,
-				new PipelineProvidedMetadataEntry(tokens.get(MLST_SEQUENCE_TYPE), "text", analysis));
-		results.put(STARAMR_GENOME_LENGTH,
-				new PipelineProvidedMetadataEntry(tokens.get(GENOME_LENGTH), "text", analysis));
-		results.put(STARAMR_N50, new PipelineProvidedMetadataEntry(tokens.get(N50), "text", analysis));
-		results.put(STARAMR_NUMBER_CONTIGS,
-				new PipelineProvidedMetadataEntry(tokens.get(NUMBER_CONTIGS), "text", analysis));
-		results.put(STARAMR_QUALITY_FEEDBACK,
-				new PipelineProvidedMetadataEntry(tokens.get(QUALITY_FEEDBACK), "text", analysis));
+
+		if (line == null || line.length() == 0) {
+			dataMap = new HashMap<>();
+			logger.info(
+					"Got empty results for staramr file [" + staramrFilePath + "] for analysis submission " + analysis);
+		} else {
+			dataMap = getDataMapForLine(columnNames, line, STARAMR_RESULTS_CONTIGS_PREFIX, staramrFilePath, analysis);
+		}
+
+		for (String resultsFieldName : STARAMR_RESULTS_METADATA_MAP.keySet()) {
+			String staramrColumnName = STARAMR_RESULTS_METADATA_MAP.get(resultsFieldName);
+			String value = dataMap.containsKey(staramrColumnName) ? dataMap.get(staramrColumnName) : "-";
+
+			results.put(resultsFieldName, new PipelineProvidedMetadataEntry(value, "text", analysis));
+		}
 
 		line = reader.readLine();
 
@@ -153,11 +204,6 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 	 */
 	private Map<String, PipelineProvidedMetadataEntry> getRgiResults(Path rgiFilePath, AnalysisSubmission analysis)
 			throws IOException, PostProcessingException {
-		final int MAX_TOKENS = 25;
-
-		final int BEST_HIT_ARO_INDEX = 8;
-		final int DRUG_CLASS_INDEX = 14;
-
 		final String DRUG_CLASS_SPLIT = ";";
 
 		final Joiner joiner = Joiner.on(", ");
@@ -170,48 +216,53 @@ public class AMRDetectionUpdater implements AnalysisSampleUpdater {
 
 		String line = reader.readLine();
 
-		List<String> tokens = SPLITTER.splitToList(line);
-		if (tokens.size() != MAX_TOKENS) {
-			throw new PostProcessingException("Invalid number of columns in RGI results file [" + rgiFilePath
-					+ "], expected [" + MAX_TOKENS + "] got [" + tokens.size() + "]");
+		List<String> columnNames = SPLITTER.splitToList(line);
+		if (columnNames.isEmpty()) {
+			logger.warn("Missing columns in RGI results file [" + rgiFilePath + "] for analysis submission " + analysis);
 		}
 
 		line = reader.readLine();
 		while (line != null) {
-			tokens = SPLITTER.splitToList(line);
-
-			if (tokens.size() != MAX_TOKENS) {
-				line = reader.readLine();
-				continue;
+			Map<String, String> lineDataMap = getDataMapForLine(columnNames, line, null, rgiFilePath, analysis);
+			
+			if (lineDataMap.containsKey(RGI_RESULTS_METADATA_MAP.get(RGI_GENE))) {
+				genotypes.add(lineDataMap.get(RGI_RESULTS_METADATA_MAP.get(RGI_GENE)));
 			}
-
-			String genotype = tokens.get(BEST_HIT_ARO_INDEX);
-			String drugClass = tokens.get(DRUG_CLASS_INDEX);
-
-			genotypes.add(genotype);
-			drugs.add(drugClass);
+			
+			if (lineDataMap.containsKey(RGI_RESULTS_METADATA_MAP.get(RGI_DRUG_CLASS))) {
+				drugs.add(lineDataMap.get(RGI_RESULTS_METADATA_MAP.get(RGI_DRUG_CLASS)));
+			}
 
 			line = reader.readLine();
 		}
 
-		if (!genotypes.isEmpty()) {
+		String genotypesString = "-";
+		String drugsString = "-";
+
+		if (genotypes.isEmpty()) {
+			logger.info("No genotype results found in rgi output file [" + rgiFilePath + "], for analysis submission "
+					+ analysis);
+		} else {
 			Collections.sort(genotypes);
 
-			String genotypesString = joiner.join(genotypes);
+			genotypesString = joiner.join(genotypes);
+		}
 
+		if (drugs.isEmpty()) {
+			logger.info("No drug results found in rgi output file [" + rgiFilePath + "], for analysis submission "
+					+ analysis);
+		} else {
 			Set<String> drugsSet = Sets.newTreeSet();
 			drugs.forEach(t -> drugsSet.addAll(Lists.newArrayList(t.split(DRUG_CLASS_SPLIT))));
 
-			String drugsString = joiner.join(drugsSet);
-
-			Map<String, PipelineProvidedMetadataEntry> results = new HashMap<>();
-			results.put(RGI_GENE, new PipelineProvidedMetadataEntry(genotypesString, "text", analysis));
-			results.put(RGI_DRUG_CLASS, new PipelineProvidedMetadataEntry(drugsString, "text", analysis));
-
-			return results;
-		} else {
-			throw new PostProcessingException("No results found in rgi output file [" + rgiFilePath + "]");
+			drugsString = joiner.join(drugsSet);
 		}
+
+		Map<String, PipelineProvidedMetadataEntry> results = new HashMap<>();
+		results.put(RGI_GENE, new PipelineProvidedMetadataEntry(genotypesString, "text", analysis));
+		results.put(RGI_DRUG_CLASS, new PipelineProvidedMetadataEntry(drugsString, "text", analysis));
+
+		return results;
 	}
 
 	/**
