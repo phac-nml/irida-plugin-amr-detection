@@ -6,6 +6,7 @@
    * The plugin will now save the additional fields provided by the newer staramr version in the metadata table.
 * Updated RGI version to `5.1.1`.
 * Updated Shovill to version `1.1.0`.
+* Fixed bug where empty RGI results would lead to metadata not being written (#8)
 
 # 0.1.0
 
