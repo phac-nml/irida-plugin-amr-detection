@@ -1,3 +1,7 @@
+# 0.2.1
+
+* Set RGI database to 'amr_detection'. A database with this name must be preloaded using the RGI data manager tool.
+
 # 0.2.0
 
 * Updated writing of metadata to be compatible with IRIDA `21.01` update.
