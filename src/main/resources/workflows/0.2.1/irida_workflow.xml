@@ -99,6 +99,12 @@
     <parameter name="rgi-3-include_loose" defaultValue="false">
       <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/card/rgi/rgi/5.1.1" parameterName="include_loose"/>
     </parameter>
+    <parameter name="rgi_database" required="true">
+      <dynamicSource>
+        <galaxyToolDataTable name="rgi_databases" displayColumn="name" parameterColumn="value" />
+      </dynamicSource>
+      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/card/rgi/rgi/5.1.1" parameterName="rgi_db_local" />
+    </parameter>
   </parameters>
   <outputs>
     <output name="staramr-summary.tsv" fileName="staramr-summary.tsv"/>
