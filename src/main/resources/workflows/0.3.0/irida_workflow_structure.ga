@@ -1,0 +1,376 @@
+{
+    "a_galaxy_workflow": "true",
+    "annotation": "",
+    "format-version": "0.1",
+    "name": "AMR Detection (0.3.0)",
+    "steps": {
+        "0": {
+            "annotation": "",
+            "content_id": null,
+            "errors": null,
+            "id": 0,
+            "input_connections": {},
+            "inputs": [
+                {
+                    "description": "",
+                    "name": "sequence_reads_paired"
+                }
+            ],
+            "label": "sequence_reads_paired",
+            "name": "Input dataset collection",
+            "outputs": [],
+            "position": {
+                "bottom": 179.6999969482422,
+                "height": 82.19999694824219,
+                "left": 300,
+                "right": 500,
+                "top": 97.5,
+                "width": 200,
+                "x": 300,
+                "y": 97.5
+            },
+            "tool_id": null,
+            "tool_state": "{\"optional\": false, \"collection_type\": \"list:paired\"}",
+            "tool_version": null,
+            "type": "data_collection_input",
+            "uuid": "f39af4f6-29a6-4358-84b4-3319899cbb12",
+            "workflow_outputs": [
+                {
+                    "label": null,
+                    "output_name": "output",
+                    "uuid": "640abc2e-17c6-4581-86e1-c753c517b2ad"
+                }
+            ]
+        },
+        "1": {
+            "annotation": "",
+            "content_id": "toolshed.g2.bx.psu.edu/repos/iuc/shovill/shovill/1.1.0+galaxy1",
+            "errors": null,
+            "id": 1,
+            "input_connections": {
+                "library|input1": {
+                    "id": 0,
+                    "output_name": "output"
+                }
+            },
+            "inputs": [],
+            "label": null,
+            "name": "Shovill",
+            "outputs": [
+                {
+                    "name": "shovill_std_log",
+                    "type": "txt"
+                },
+                {
+                    "name": "contigs",
+                    "type": "fasta"
+                },
+                {
+                    "name": "contigs_graph",
+                    "type": "txt"
+                }
+            ],
+            "position": {
+                "bottom": 319.1000061035156,
+                "height": 235.60000610351562,
+                "left": 578,
+                "right": 778,
+                "top": 83.5,
+                "width": 200,
+                "x": 578,
+                "y": 83.5
+            },
+            "post_job_actions": {
+                "RenameDatasetActioncontigs": {
+                    "action_arguments": {
+                        "newname": "shovill-contigs.fasta"
+                    },
+                    "action_type": "RenameDatasetAction",
+                    "output_name": "contigs"
+                },
+                "RenameDatasetActioncontigs_graph": {
+                    "action_arguments": {
+                        "newname": "shovill-contigs.gfa"
+                    },
+                    "action_type": "RenameDatasetAction",
+                    "output_name": "contigs_graph"
+                },
+                "RenameDatasetActionshovill_std_log": {
+                    "action_arguments": {
+                        "newname": "shovill-std.log"
+                    },
+                    "action_type": "RenameDatasetAction",
+                    "output_name": "shovill_std_log"
+                }
+            },
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/iuc/shovill/shovill/1.1.0+galaxy1",
+            "tool_shed_repository": {
+                "changeset_revision": "ad80238462c1",
+                "name": "shovill",
+                "owner": "iuc",
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            },
+            "tool_state": "{\"adv\": {\"namefmt\": \"contig%05d\", \"depth\": \"100\", \"gsize\": \"\", \"kmers\": \"\", \"opts\": \"\", \"keep_files\": {\"nocorr\": \"no_correction\", \"__current_case__\": 0}, \"minlen\": \"300\", \"mincov\": \"1\"}, \"assembler\": \"spades\", \"library\": {\"lib_type\": \"collection\", \"__current_case__\": 1, \"input1\": {\"__class__\": \"ConnectedValue\"}}, \"log\": \"true\", \"trim\": \"false\", \"__page__\": null, \"__rerun_remap_job_id__\": null}",
+            "tool_version": "1.1.0+galaxy1",
+            "type": "tool",
+            "uuid": "ed6c7b03-7394-466e-b8ed-d907483d0a42",
+            "workflow_outputs": [
+                {
+                    "label": null,
+                    "output_name": "contigs",
+                    "uuid": "b6954abf-5e8e-47f0-995a-4812de8a8f8c"
+                },
+                {
+                    "label": null,
+                    "output_name": "shovill_std_log",
+                    "uuid": "f94e2c24-33a7-41c4-8dd9-8919bc9c3024"
+                },
+                {
+                    "label": null,
+                    "output_name": "contigs_graph",
+                    "uuid": "887b7dcb-7d6e-4e10-9061-f3796d795c2b"
+                }
+            ]
+        },
+        "2": {
+            "annotation": "",
+            "content_id": "toolshed.g2.bx.psu.edu/repos/nml/staramr/staramr_search/0.9.1+galaxy0",
+            "errors": null,
+            "id": 2,
+            "input_connections": {
+                "genomes": {
+                    "id": 1,
+                    "output_name": "contigs"
+                }
+            },
+            "inputs": [],
+            "label": null,
+            "name": "staramr",
+            "outputs": [
+                {
+                    "name": "blast_hits",
+                    "type": "input"
+                },
+                {
+                    "name": "mlst",
+                    "type": "tabular"
+                },
+                {
+                    "name": "summary",
+                    "type": "tabular"
+                },
+                {
+                    "name": "detailed_summary",
+                    "type": "tabular"
+                },
+                {
+                    "name": "resfinder",
+                    "type": "tabular"
+                },
+                {
+                    "name": "plasmidfinder",
+                    "type": "tabular"
+                },
+                {
+                    "name": "settings",
+                    "type": "txt"
+                },
+                {
+                    "name": "excel",
+                    "type": "xlsx"
+                }
+            ],
+            "position": {
+                "bottom": 722.7000122070312,
+                "height": 571.2000122070312,
+                "left": 856,
+                "right": 1056,
+                "top": 151.5,
+                "width": 200,
+                "x": 856,
+                "y": 151.5
+            },
+            "post_job_actions": {
+                "HideDatasetActionblast_hits": {
+                    "action_arguments": {},
+                    "action_type": "HideDatasetAction",
+                    "output_name": "blast_hits"
+                },
+                "RenameDatasetActiondetailed_summary": {
+                    "action_arguments": {
+                        "newname": "staramr-detailed-summary.tsv"
+                    },
+                    "action_type": "RenameDatasetAction",
+                    "output_name": "detailed_summary"
+                },
+                "RenameDatasetActionexcel": {
+                    "action_arguments": {
+                        "newname": "staramr-excel.xlsx"
+                    },
+                    "action_type": "RenameDatasetAction",
+                    "output_name": "excel"
+                },
+                "RenameDatasetActionmlst": {
+                    "action_arguments": {
+                        "newname": "staramr-mlst.tsv"
+                    },
+                    "action_type": "RenameDatasetAction",
+                    "output_name": "mlst"
+                },
+                "RenameDatasetActionplasmidfinder": {
+                    "action_arguments": {
+                        "newname": "staramr-plasmidfinder.tsv"
+                    },
+                    "action_type": "RenameDatasetAction",
+                    "output_name": "plasmidfinder"
+                },
+                "RenameDatasetActionresfinder": {
+                    "action_arguments": {
+                        "newname": "staramr-resfinder.tsv"
+                    },
+                    "action_type": "RenameDatasetAction",
+                    "output_name": "resfinder"
+                },
+                "RenameDatasetActionsettings": {
+                    "action_arguments": {
+                        "newname": "staramr-settings.txt"
+                    },
+                    "action_type": "RenameDatasetAction",
+                    "output_name": "settings"
+                },
+                "RenameDatasetActionsummary": {
+                    "action_arguments": {
+                        "newname": "staramr-summary.tsv"
+                    },
+                    "action_type": "RenameDatasetAction",
+                    "output_name": "summary"
+                }
+            },
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/nml/staramr/staramr_search/0.9.1+galaxy0",
+            "tool_shed_repository": {
+                "changeset_revision": "4d83eccf5f81",
+                "name": "staramr",
+                "owner": "nml",
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            },
+            "tool_state": "{\"advanced\": {\"pid_threshold\": \"98.0\", \"plength_resfinder\": \"60.0\", \"plength_pointfinder\": \"95.0\", \"plength_plasmidfinder\": \"60.0\", \"genome_size_lower_bound\": \"4000000\", \"genome_size_upper_bound\": \"6000000\", \"minimum_N50_value\": \"10000\", \"minimum_contig_length\": \"300\", \"unacceptable_number_contigs\": \"1000\", \"report_all_blast\": \"false\", \"exclude_negatives\": \"false\", \"exclude_resistance_phenotypes\": \"false\", \"mlst_scheme\": \"auto\", \"exclude_genes\": {\"exclude_genes_condition\": \"default\", \"__current_case__\": 0}, \"plasmidfinder_type\": \"include_all\"}, \"genomes\": {\"__class__\": \"ConnectedValue\"}, \"pointfinder_db\": {\"use_pointfinder\": \"disabled\", \"__current_case__\": 0}, \"__page__\": null, \"__rerun_remap_job_id__\": null}",
+            "tool_version": "0.9.1+galaxy0",
+            "type": "tool",
+            "uuid": "d9a2621d-0623-40a1-b62c-55f220982524",
+            "workflow_outputs": [
+                {
+                    "label": null,
+                    "output_name": "mlst",
+                    "uuid": "f15c238e-a394-4962-9e1f-b134b729ab9c"
+                },
+                {
+                    "label": null,
+                    "output_name": "settings",
+                    "uuid": "1b4b4507-dc39-4cd0-9694-be0718293d14"
+                },
+                {
+                    "label": null,
+                    "output_name": "summary",
+                    "uuid": "d442d3b0-6e1d-4761-9c60-0e1aaae46923"
+                },
+                {
+                    "label": null,
+                    "output_name": "resfinder",
+                    "uuid": "ffd080f0-9710-4ed0-99b2-2d3db04814e6"
+                },
+                {
+                    "label": null,
+                    "output_name": "plasmidfinder",
+                    "uuid": "a38fd340-3845-41a2-97ae-2738c0a40ff0"
+                },
+                {
+                    "label": null,
+                    "output_name": "excel",
+                    "uuid": "94c72c98-7ba0-4464-aa07-faacc28228ef"
+                },
+                {
+                    "label": null,
+                    "output_name": "detailed_summary",
+                    "uuid": "80fc49df-f599-4703-9cfe-ff230ea08b45"
+                }
+            ]
+        },
+        "3": {
+            "annotation": "",
+            "content_id": "toolshed.g2.bx.psu.edu/repos/card/rgi/rgi/5.2.1",
+            "errors": null,
+            "id": 3,
+            "input_connections": {
+                "input_sequence": {
+                    "id": 1,
+                    "output_name": "contigs"
+                }
+            },
+            "inputs": [],
+            "label": null,
+            "name": "Resistance Gene Identifier (RGI)",
+            "outputs": [
+                {
+                    "name": "report",
+                    "type": "json"
+                },
+                {
+                    "name": "summary",
+                    "type": "tabular"
+                }
+            ],
+            "position": {
+                "bottom": 1006.5,
+                "height": 246,
+                "left": 856,
+                "right": 1056,
+                "top": 760.5,
+                "width": 200,
+                "x": 856,
+                "y": 760.5
+            },
+            "post_job_actions": {
+                "RenameDatasetActionreport": {
+                    "action_arguments": {
+                        "newname": "rgi-report.json"
+                    },
+                    "action_type": "RenameDatasetAction",
+                    "output_name": "report"
+                },
+                "RenameDatasetActionsummary": {
+                    "action_arguments": {
+                        "newname": "rgi-summary.tsv"
+                    },
+                    "action_type": "RenameDatasetAction",
+                    "output_name": "summary"
+                }
+            },
+            "tool_id": "toolshed.g2.bx.psu.edu/repos/card/rgi/rgi/5.2.1",
+            "tool_shed_repository": {
+                "changeset_revision": "84bd24ac33fd",
+                "name": "rgi",
+                "owner": "card",
+                "tool_shed": "toolshed.g2.bx.psu.edu"
+            },
+            "tool_state": "{\"alignment_tool\": \"diamond\", \"data\": \"NA\", \"db_opts\": {\"db_opts_selector\": \"default\", \"__current_case__\": 0, \"rgi_db_local\": \"\", \"rgi_db_hist\": \"\"}, \"include_loose\": \"false\", \"input_sequence\": {\"__class__\": \"ConnectedValue\"}, \"input_type\": \"contig\", \"low_quality\": \"false\", \"__page__\": null, \"__rerun_remap_job_id__\": null}",
+            "tool_version": "5.2.1",
+            "type": "tool",
+            "uuid": "f3fb2227-4391-4e30-a2c4-36f4211a4c12",
+            "workflow_outputs": [
+                {
+                    "label": null,
+                    "output_name": "report",
+                    "uuid": "c6fbbf5a-e4d2-4e2e-ac56-126c48821bf6"
+                },
+                {
+                    "label": null,
+                    "output_name": "summary",
+                    "uuid": "9cdfc452-749f-4e5d-acba-bacbdaac6ac0"
+                }
+            ]
+        }
+    },
+    "tags": [],
+    "uuid": "243c8bed-86b3-4430-8471-8f2771e16b0b",
+    "version": 2
+}
