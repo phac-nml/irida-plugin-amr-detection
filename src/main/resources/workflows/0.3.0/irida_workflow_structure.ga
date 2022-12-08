@@ -20,14 +20,8 @@
             "name": "Input dataset collection",
             "outputs": [],
             "position": {
-                "bottom": 179.6999969482422,
-                "height": 82.19999694824219,
-                "left": 300,
-                "right": 500,
-                "top": 97.5,
-                "width": 200,
-                "x": 300,
-                "y": 97.5
+                "left": 200,
+                "top": 200
             },
             "tool_id": null,
             "tool_state": "{\"optional\": false, \"collection_type\": \"list:paired\"}",
@@ -38,7 +32,7 @@
                 {
                     "label": null,
                     "output_name": "output",
-                    "uuid": "640abc2e-17c6-4581-86e1-c753c517b2ad"
+                    "uuid": "dfa1663c-7fe7-4f20-bb8c-e9eb97bcb386"
                 }
             ]
         },
@@ -71,14 +65,8 @@
                 }
             ],
             "position": {
-                "bottom": 319.1000061035156,
-                "height": 235.60000610351562,
-                "left": 578,
-                "right": 778,
-                "top": 83.5,
-                "width": 200,
-                "x": 578,
-                "y": 83.5
+                "left": 493,
+                "top": 200
             },
             "post_job_actions": {
                 "RenameDatasetActioncontigs": {
@@ -181,14 +169,8 @@
                 }
             ],
             "position": {
-                "bottom": 722.7000122070312,
-                "height": 571.2000122070312,
-                "left": 856,
-                "right": 1056,
-                "top": 151.5,
-                "width": 200,
-                "x": 856,
-                "y": 151.5
+                "left": 821,
+                "top": 200
             },
             "post_job_actions": {
                 "HideDatasetActionblast_hits": {
@@ -306,7 +288,12 @@
                     "output_name": "contigs"
                 }
             },
-            "inputs": [],
+            "inputs": [
+                {
+                    "description": "runtime parameter for tool Resistance Gene Identifier (RGI)",
+                    "name": "input_sequence"
+                }
+            ],
             "label": null,
             "name": "Resistance Gene Identifier (RGI)",
             "outputs": [
@@ -320,14 +307,8 @@
                 }
             ],
             "position": {
-                "bottom": 1006.5,
-                "height": 246,
-                "left": 856,
-                "right": 1056,
-                "top": 760.5,
-                "width": 200,
-                "x": 856,
-                "y": 760.5
+                "left": 821,
+                "top": 677
             },
             "post_job_actions": {
                 "RenameDatasetActionreport": {
@@ -352,7 +333,7 @@
                 "owner": "card",
                 "tool_shed": "toolshed.g2.bx.psu.edu"
             },
-            "tool_state": "{\"alignment_tool\": \"diamond\", \"data\": \"NA\", \"db_opts\": {\"db_opts_selector\": \"default\", \"__current_case__\": 0, \"rgi_db_local\": \"\", \"rgi_db_hist\": \"\"}, \"include_loose\": \"false\", \"input_sequence\": {\"__class__\": \"ConnectedValue\"}, \"input_type\": \"contig\", \"low_quality\": \"false\", \"__page__\": null, \"__rerun_remap_job_id__\": null}",
+            "tool_state": "{\"alignment_tool\": \"diamond\", \"data\": \"NA\", \"db_opts\": {\"db_opts_selector\": \"local\", \"__current_case__\": 1, \"rgi_db_local\": \"card\", \"rgi_db_hist\": \"\"}, \"include_loose\": \"false\", \"input_sequence\": {\"__class__\": \"RuntimeValue\"}, \"input_type\": \"contig\", \"low_quality\": \"false\", \"__page__\": null, \"__rerun_remap_job_id__\": null}",
             "tool_version": "5.2.1",
             "type": "tool",
             "uuid": "f3fb2227-4391-4e30-a2c4-36f4211a4c12",
@@ -371,6 +352,6 @@
         }
     },
     "tags": [],
-    "uuid": "243c8bed-86b3-4430-8471-8f2771e16b0b",
-    "version": 2
+    "uuid": "779dd318-5fbe-49c0-a43c-87080d6a278b",
+    "version": 1
 }
