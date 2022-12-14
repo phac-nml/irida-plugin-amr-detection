@@ -99,9 +99,6 @@
     <parameter name="rgi-3-include_loose" defaultValue="false">
       <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/card/rgi/rgi/5.2.1" parameterName="include_loose"/>
     </parameter>
-    <parameter name="rgi-3-db_opts_selector" defaultValue="local">
-      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/card/rgi/rgi/5.2.1" parameterName="db_opts.db_opts_selector"/>
-    </parameter>
     <parameter name="rgi-3-rgi_db_local" required="true">
         <dynamicSource>
             <galaxyToolDataTable name="rgi_databases" displayColumn="name" parameterColumn="value" />
