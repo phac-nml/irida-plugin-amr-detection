@@ -39,6 +39,19 @@ In order to use this pipeline, you will also have to install the [RGI][], [stara
 | staramr | `0.9.1+galaxy0`  | <https://toolshed.g2.bx.psu.edu/view/nml/staramr/4d83eccf5f81> |
 | shovill | `1.1.0+galaxy1`  | <https://toolshed.g2.bx.psu.edu/view/iuc/shovill/ad80238462c1> |
 
+If you run into issues when installing RGI into Galaxy related to dependency resolution issues in Conda, then the following may help install RGI 5.2.1 into Galaxy:
+
+Using the Conda installation that Galaxy uses (which is likely different from the system's Conda installation), run the following prior to installing the RGI tool in Galaxy:
+
+```
+conda install -c conda-forge -c bioconda -c defaults mamba -y
+mamba create -c iuc -c conda-forge -c bioconda -c defaults --no-channel-priority --name __rgi@5.2.1 rgi=5.2.1 -y
+```
+
+This will install mamba into the Conda environment used by Galaxy, which is better and performing dependency resolution, and then will create an RGI Conda environment named `__rgi@5.2.1` with RGI v5.2.1 installed within it. This environment will be named in a way that Galaxy expects, which is important for the next step.
+
+Attempt to install RGI v5.2.1 in Galaxy as normal. Behind the scences, Galaxy will recognize that the previously created RGI conda environment exists and it will use that existing installation.
+
 # Tutorial
 
 This tutorial shows how to run the **AMR Detection** pipeline in IRIDA.
