@@ -105,7 +105,7 @@
         </dynamicSource>
         <toolParameter
                 toolId="toolshed.g2.bx.psu.edu/repos/card/rgi/rgi/5.2.1"
-                parameterName="card" />
+                parameterName="db_opts.rgi_db_local" />
     </parameter>
   </parameters>
   <outputs>
