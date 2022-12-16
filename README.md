@@ -27,7 +27,7 @@ This project contains an [IRIDA][] plugin for a pipeline to perform AMR detectio
 
 Please download the provided `amr-detection-[version].jar` from the [releases][] page and copy to your `/etc/irida/plugins` directory.  Now you may start IRIDA and you should see the pipeline appear in your list of pipelines.
 
-*Note:* This plugin requires you to be running IRIDA version >= `21.01`. Please see the [IRIDA][] documentation for more details.
+*Note:* This plugin requires you to be running IRIDA version >= `22.09.4`. Please see the [IRIDA][] documentation for more details.
 
 ## Installing Galaxy Dependencies
 
@@ -35,9 +35,9 @@ In order to use this pipeline, you will also have to install the [RGI][], [stara
 
 | Name    | Version          | Galaxy Tool                                                    |
 |---------|------------------|----------------------------------------------------------------|
-| RGI     | `5.1.1`          | <https://toolshed.g2.bx.psu.edu/view/card/rgi/bfbfc24c5af2>    |
-| staramr | `0.7.2+galaxy0`  | <https://toolshed.g2.bx.psu.edu/view/nml/staramr/4b9a8031ab74> |
-| shovill | `1.1.0+galaxy0`  | <https://toolshed.g2.bx.psu.edu/view/iuc/shovill/83ead2be47b2> |
+| RGI     | `5.2.1`          | <https://toolshed.g2.bx.psu.edu/view/card/rgi/84bd24ac33fd>    |
+| staramr | `0.9.1+galaxy0`  | <https://toolshed.g2.bx.psu.edu/view/nml/staramr/4d83eccf5f81> |
+| shovill | `1.1.0+galaxy1`  | <https://toolshed.g2.bx.psu.edu/view/iuc/shovill/ad80238462c1> |
 
 # Tutorial
 
@@ -115,7 +115,7 @@ If you selected the **Save AMR detection results to Project Line List Metadata**
 
 ## Installing IRIDA Libraries
 
-To build this plugin yourself, you must first install [IRIDA][] to your local Maven repository. Please make sure you are installing the IRIDA version defined in the `irida.version.compiletime` property in the [pom.xml][] file (e.g., `21.01`). Or, alternatively, please update the IRIDA dependency version in the `pom.xml` file.
+To build this plugin yourself, you must first install [IRIDA][] to your local Maven repository. Please make sure you are installing the IRIDA version defined in the `irida.version.compiletime` property in the [pom.xml][] file (e.g., `22.09.4`). Or, alternatively, please update the IRIDA dependency version in the `pom.xml` file.
 
 To install the IRIDA libraries to a local Maven repository, please run the following from within the [IRIDA][] project (the `irida/` directory):
 
