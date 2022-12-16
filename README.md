@@ -48,7 +48,7 @@ conda install -c conda-forge -c bioconda -c defaults mamba -y
 mamba create -c iuc -c conda-forge -c bioconda -c defaults --no-channel-priority --name __rgi@5.2.1 rgi=5.2.1 -y
 ```
 
-This will install mamba into the Conda environment used by Galaxy, which is better and performing dependency resolution, and then will create an RGI Conda environment named `__rgi@5.2.1` with RGI v5.2.1 installed within it. This environment will be named in a way that Galaxy expects, which is important for the next step.
+This code will install mamba into the Conda environment used by Galaxy, which is better at performing dependency resolution, and then it will create an RGI Conda environment named `__rgi@5.2.1` with RGI v5.2.1 installed within it. This environment will be named in a way that Galaxy expects, which is important for the next step.
 
 Attempt to install RGI v5.2.1 in Galaxy as normal. Behind the scences, Galaxy will recognize that the previously created RGI conda environment exists and it will use that existing installation.
 
