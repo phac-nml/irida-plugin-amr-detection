@@ -27,7 +27,7 @@ This project contains an [IRIDA][] plugin for a pipeline to perform AMR detectio
 
 Please download the provided `amr-detection-[version].jar` from the [releases][] page and copy to your `/etc/irida/plugins` directory.  Now you may start IRIDA and you should see the pipeline appear in your list of pipelines.
 
-*Note:* This plugin requires you to be running IRIDA version >= `22.09.4`. Please see the [IRIDA][] documentation for more details.
+*Note:* This plugin requires you to be running IRIDA version >= `21.01`. Please see the [IRIDA][] documentation for more details.
 
 ## Installing Galaxy Dependencies
 
@@ -115,7 +115,7 @@ If you selected the **Save AMR detection results to Project Line List Metadata**
 
 ## Installing IRIDA Libraries
 
-To build this plugin yourself, you must first install [IRIDA][] to your local Maven repository. Please make sure you are installing the IRIDA version defined in the `irida.version.compiletime` property in the [pom.xml][] file (e.g., `22.09.4`). Or, alternatively, please update the IRIDA dependency version in the `pom.xml` file.
+To build this plugin yourself, you must first install [IRIDA][] to your local Maven repository. Please make sure you are installing the IRIDA version defined in the `irida.version.compiletime` property in the [pom.xml][] file (e.g., `21.01`). Or, alternatively, please update the IRIDA dependency version in the `pom.xml` file.
 
 To install the IRIDA libraries to a local Maven repository, please run the following from within the [IRIDA][] project (the `irida/` directory):
 
