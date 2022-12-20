@@ -52,6 +52,10 @@ This code will install mamba into the Conda environment used by Galaxy, which is
 
 Attempt to install RGI v5.2.1 in Galaxy as normal. Behind the scences, Galaxy will recognize that the previously created RGI conda environment exists and it will use that existing installation.
 
+Finally, the RGI database will need to be installed manually. On the Galaxy admin page, navigate to the "Local Data" section. You should find the "RGI Database Builder" button below the "Installed Data Managers" section. Click the "RGI Database Builder" button and you will be brought to a new page where you can start a job to download and build the database. You should update the "Database name" section (ex: "CARD") before starting the job. Once you hit the execute button, Galaxy will start to download and build the database.
+
+![rgi-database-builder][]
+
 # Tutorial
 
 This tutorial shows how to run the **AMR Detection** pipeline in IRIDA.
