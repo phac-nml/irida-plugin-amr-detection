@@ -1,3 +1,10 @@
+# 0.3.0
+
+* Updates staramr to version 0.9.1.
+* Updates Shovill to version 1.1.0+galaxy1.
+* Updates RGI to version 5.2.1.
+   * Specific RGI databases can be installed in Galaxy and selected through the pipeline.
+
 # 0.2.0
 
 * Updated writing of metadata to be compatible with IRIDA `21.01` update.

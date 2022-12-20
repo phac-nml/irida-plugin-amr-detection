@@ -35,9 +35,26 @@ In order to use this pipeline, you will also have to install the [RGI][], [stara
 
 | Name    | Version          | Galaxy Tool                                                    |
 |---------|------------------|----------------------------------------------------------------|
-| RGI     | `5.1.1`          | <https://toolshed.g2.bx.psu.edu/view/card/rgi/bfbfc24c5af2>    |
-| staramr | `0.7.2+galaxy0`  | <https://toolshed.g2.bx.psu.edu/view/nml/staramr/4b9a8031ab74> |
-| shovill | `1.1.0+galaxy0`  | <https://toolshed.g2.bx.psu.edu/view/iuc/shovill/83ead2be47b2> |
+| RGI     | `5.2.1`          | <https://toolshed.g2.bx.psu.edu/view/card/rgi/84bd24ac33fd>    |
+| staramr | `0.9.1+galaxy0`  | <https://toolshed.g2.bx.psu.edu/view/nml/staramr/4d83eccf5f81> |
+| shovill | `1.1.0+galaxy1`  | <https://toolshed.g2.bx.psu.edu/view/iuc/shovill/ad80238462c1> |
+
+If you run into issues when installing RGI into Galaxy related to dependency resolution issues in Conda, then the following may help install RGI 5.2.1 into Galaxy:
+
+Using the Conda installation that Galaxy uses (which is likely different from the system's Conda installation), run the following prior to installing the RGI tool in Galaxy:
+
+```
+conda install -c conda-forge -c bioconda -c defaults mamba -y
+mamba create -c iuc -c conda-forge -c bioconda -c defaults --no-channel-priority --name __rgi@5.2.1 rgi=5.2.1 -y
+```
+
+This code will install mamba into the Conda environment used by Galaxy, which is better at performing dependency resolution, and then it will create an RGI Conda environment named `__rgi@5.2.1` with RGI v5.2.1 installed within it. This environment will be named in a way that Galaxy expects, which is important for the next step.
+
+Attempt to install RGI v5.2.1 in Galaxy as normal. Behind the scences, Galaxy will recognize that the previously created RGI conda environment exists and it will use that existing installation.
+
+Finally, the RGI database will need to be installed manually. On the Galaxy admin page, navigate to the "Local Data" section. You should find the "RGI Database Builder" button below the "Installed Data Managers" section. Click the "RGI Database Builder" button and you will be brought to a new page where you can start a job to download and build the database. You should update the "Database name" section (ex: "CARD") before starting the job. Once you hit the execute button, Galaxy will start to download and build the database.
+
+![rgi-database-builder.png](images/rgi-database-builder.png)
 
 # Tutorial
 
