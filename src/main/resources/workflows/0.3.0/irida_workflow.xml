@@ -39,8 +39,17 @@
     <parameter name="shovill-1-assembler" defaultValue="spades">
       <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/iuc/shovill/shovill/1.1.0+galaxy1" parameterName="assembler"/>
     </parameter>
-    <parameter name="staramr-2-use_pointfinder" defaultValue="disabled">
-      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/nml/staramr/staramr_search/0.9.1+galaxy0" parameterName="use_pointfinder"/>
+    <parameter name="staramr-2-pointfinder_db.use_pointfinder" required="true">
+      <choices>
+        <choice name="disabled" value="disabled"/>
+        <choice name="campylobacter" value="campylobacter"/>
+        <choice name="enterococcus_faecalis" value="enterococcus_faecalis"/>
+        <choice name="enterococcus_faecium" value="enterococcus_faecium"/>
+        <choice name="escherichia_coli" value="escherichia_coli"/>
+        <choice name="helicobacter_pylori" value="helicobacter_pylori"/>
+        <choice name="salmonella" value="salmonella"/>
+      </choices>
+      <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/nml/staramr/staramr_search/0.9.1+galaxy0" parameterName="pointfinder_db.use_pointfinder"/>
     </parameter>
     <parameter name="staramr-2-advanced.plength_plasmidfinder" defaultValue="60.0">
       <toolParameter toolId="toolshed.g2.bx.psu.edu/repos/nml/staramr/staramr_search/0.9.1+galaxy0" parameterName="advanced.plength_plasmidfinder"/>
