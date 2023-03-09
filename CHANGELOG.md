@@ -4,6 +4,7 @@
 * Updates Shovill to version 1.1.0+galaxy1.
 * Updates RGI to version 5.2.1.
    * Specific RGI databases can be installed in Galaxy and selected through the pipeline.
+* Moved selection of PointFinder organism to a dropdown list when starting pipeline ([PR#20](https://github.com/phac-nml/irida-plugin-amr-detection/pull/20))
 
 # 0.2.0
 
